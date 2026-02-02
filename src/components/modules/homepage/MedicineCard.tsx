@@ -7,6 +7,7 @@ export type Medicine = {
   name: string;
   price: number;
   image: string;
+  manufacturer?: string;
 };
 
 export default function MedicineCard({ medicine }: { medicine: Medicine }) {
@@ -24,6 +25,7 @@ export default function MedicineCard({ medicine }: { medicine: Medicine }) {
       <CardContent className="p-4 flex-1 space-y-1">
         <h3 className="font-medium">{medicine.name}</h3>
         <p className="text-sm text-muted-foreground">৳{medicine.price}</p>
+        <p className="font-bold">Manufacturer: {medicine.manufacturer}</p>
       </CardContent>
 
       <CardFooter className="p-4 pt-0">

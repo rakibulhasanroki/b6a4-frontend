@@ -1,12 +1,13 @@
-import ShopLayout from "@/components/modules/shop/ShopLayout";
+import ShopLayout, { SearchParams } from "@/components/modules/shop/ShopLayout";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Shop",
 };
 
-function Shop() {
-  return <ShopLayout />;
+async function Shop({ searchParams }: SearchParams) {
+  const params = await searchParams;
+  return <ShopLayout searchParams={params} />;
 }
 
 export default Shop;

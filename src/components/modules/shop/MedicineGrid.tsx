@@ -1,46 +1,22 @@
+import { Medicine } from "@/services/medicine.service";
 import MedicineCard from "../homepage/MedicineCard";
+import PaginationControls from "@/components/ui/pagination";
 
-const demoMedicines = [
-  {
-    name: "Paracetamol 500mg",
-    price: 2.5,
-    image: "https://images.unsplash.com/photo-1526256262350-7da7584cf5eb",
-  },
-  {
-    name: "Ibuprofen 400mg",
-    price: 3.0,
-    image: "https://images.unsplash.com/photo-1526256262350-7da7584cf5eb",
-  },
-  {
-    name: "Amoxicillin 250mg",
-    price: 6.5,
-    image: "https://images.unsplash.com/photo-1526256262350-7da7584cf5eb",
-  },
-  {
-    name: "Vitamin C 100mg",
-    price: 5.0,
-    image: "https://images.unsplash.com/photo-1526256262350-7da7584cf5eb",
-  },
-  {
-    name: "Vitamin  100mg",
-    price: 5.0,
-    image: "https://images.unsplash.com/photo-1526256262350-7da7584cf5eb",
-  },
-  {
-    name: "Vitamin",
-    price: 5.0,
-    image: "https://images.unsplash.com/photo-1526256262350-7da7584cf5eb",
-  },
-];
-
-export default function MedicineGrid() {
+export default function MedicineGrid({
+  medicines,
+  meta,
+}: {
+  medicines: Medicine[];
+  meta: { page: number; limit: number; total: number; totalPages: number };
+}) {
   return (
     <div className="lg:col-span-3">
       <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-8">
-        {demoMedicines.map((med) => (
-          <MedicineCard key={med.name} medicine={med} />
+        {medicines.map((med) => (
+          <MedicineCard key={med.id} medicine={med} />
         ))}
       </div>
+      <PaginationControls meta={meta} />
     </div>
   );
 }
