@@ -1,12 +1,17 @@
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
+import { Category } from "@/services/category.service";
 
-export default function MedicineCategoryCard({ name }: { name: string }) {
+export default function MedicineCategoryCard({
+  category,
+}: {
+  category: Category;
+}) {
   return (
-    <Link href={`/shop?category=${name}`}>
+    <Link href={`/shop?categoryId=${category.id}`}>
       <Card className="hover:shadow-md hover:-translate-y-1 transition cursor-pointer text-center">
         <CardContent className="font-medium hover:text-primary transition">
-          {name}
+          {category.name}
         </CardContent>
       </Card>
     </Link>

@@ -10,18 +10,23 @@ export type SearchParams = {
     minPrice?: string;
     maxPrice?: string;
     manufacturer?: string;
-    page?: string;
-    limit?: string;
+    page?: number;
+    limit?: number;
   };
 };
 
 export default async function ShopLayout({ searchParams }: SearchParams) {
-  const medicines = await medicineService.getMedicines(searchParams);
+  const params = {
+    ...searchParams,
+    limit: Number(searchParams.limit ?? 9),
+  };
+
+  const medicines = await medicineService.getMedicines(params);
 
   return (
     <section className="container mx-auto px-4 py-10">
       <div className="grid lg:grid-cols-4 gap-8">
-        <div className="space-y-6 sticky top-24 h-fit">
+        <div className="space-y-6 lg:sticky top-24 h-fit">
           <SearchBar />
           <FiltersSidebar />
         </div>

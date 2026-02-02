@@ -3,12 +3,20 @@ import WhyChooseUs from "@/components/modules/homepage/WhyChooseUs";
 import CategorySection from "@/components/modules/homepage/CategorySection";
 import FeaturedSection from "@/components/modules/homepage/FeaturedSection";
 
-export default function HomePage() {
+import { categoryService } from "@/services/category.service";
+import { medicineService } from "@/services/medicine.service";
+
+export default async function HomePage() {
+  const categoriesData = await categoryService.getCategories();
+  const medicineData = await medicineService.getMedicines({
+    limit: 6,
+    page: 1,
+  });
   return (
     <>
       <HeroSection />
-      <CategorySection />
-      <FeaturedSection />
+      <CategorySection categories={categoriesData?.data || []} />
+      <FeaturedSection medicines={medicineData?.data || []} />
       <WhyChooseUs />
     </>
   );

@@ -18,6 +18,8 @@ export interface MedicineQuery {
   minPrice?: string;
   maxPrice?: string;
   price?: string;
+  page?: number;
+  limit?: number;
 }
 
 export const medicineService = {

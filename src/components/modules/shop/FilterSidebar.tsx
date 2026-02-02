@@ -37,7 +37,7 @@ export default function FiltersSidebar() {
     } else {
       params.delete("maxPrice");
     }
-
+    params.delete("page");
     router.push(`/shop?${params.toString()}`);
   }
 
@@ -50,7 +50,7 @@ export default function FiltersSidebar() {
     } else {
       params.set("categoryId", categoryId);
     }
-
+    params.delete("page");
     router.push(`/shop?${params.toString()}`);
   }
 
