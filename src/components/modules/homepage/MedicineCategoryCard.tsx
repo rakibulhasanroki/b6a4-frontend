@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
-import { Category } from "@/services/category.service";
+import { Category } from "@/types";
 
 export default function MedicineCategoryCard({
   category,

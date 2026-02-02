@@ -2,11 +2,6 @@ import { env } from "@/env";
 
 const API_URL = env.API_URL;
 
-export interface Category {
-  id: string;
-  name: string;
-}
-
 export const categoryService = {
   getCategories: async function () {
     try {

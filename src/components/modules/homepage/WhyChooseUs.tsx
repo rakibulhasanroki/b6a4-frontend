@@ -1,5 +1,24 @@
 import { Card, CardContent } from "@/components/ui/card";
 
+const whyChooseUsData = [
+  {
+    title: "Genuine Medicines",
+    desc: "We provide 100% authentic and approved medicines.",
+  },
+  {
+    title: "Fast Delivery",
+    desc: "Quick and reliable delivery to your doorstep.",
+  },
+  {
+    title: "Secure Orders",
+    desc: "Your prescriptions and personal data are safe with us.",
+  },
+  {
+    title: "Customer Support",
+    desc: "Friendly support ready to help you anytime.",
+  },
+];
+
 function WhyChooseUs() {
   return (
     <section className="py-20">
@@ -7,24 +26,7 @@ function WhyChooseUs() {
         <h2 className="text-2xl font-semibold mb-12">Why Choose MediStore?</h2>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 text-left">
-          {[
-            {
-              title: "Genuine Medicines",
-              desc: "We provide 100% authentic and approved medicines.",
-            },
-            {
-              title: "Fast Delivery",
-              desc: "Quick and reliable delivery to your doorstep.",
-            },
-            {
-              title: "Secure Orders",
-              desc: "Your prescriptions and personal data are safe with us.",
-            },
-            {
-              title: "Customer Support",
-              desc: "Friendly support ready to help you anytime.",
-            },
-          ].map((item) => (
+          {whyChooseUsData.map((item) => (
             <Card key={item.title} className="hover:shadow-md transition">
               <CardContent>
                 <h3 className="font-semibold mb-2">{item.title}</h3>

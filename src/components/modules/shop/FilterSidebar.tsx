@@ -7,7 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { getCategories } from "@/actions/category.action";
-import { Category } from "@/services/category.service";
+import { Category } from "@/types";
 
 export default function FiltersSidebar() {
   const [categories, setCategories] = useState<Category[]>([]);

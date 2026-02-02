@@ -1,4 +1,4 @@
-import { Medicine } from "@/services/medicine.service";
+import { Medicine } from "@/types";
 import MedicineCard from "../homepage/MedicineCard";
 import PaginationControls from "@/components/ui/pagination";
 

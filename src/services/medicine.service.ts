@@ -2,15 +2,6 @@ import { env } from "@/env";
 
 const API_URL = env.API_URL;
 
-export interface Medicine {
-  id: string;
-  name: string;
-  price: number;
-  image: string;
-  manufacturer?: string;
-  categoryId?: string;
-}
-
 export interface MedicineQuery {
   search?: string;
   categoryId?: string;
@@ -65,7 +56,7 @@ export const medicineService = {
 
       const data = await res.json();
 
-      return { data: data.data.data, error: null };
+      return { data: data.data, error: null };
     } catch (err) {
       return {
         data: null,

@@ -1,4 +1,4 @@
-import { Category } from "@/services/category.service";
+import { Category } from "@/types";
 import MedicineCategoryCard from "./MedicineCategoryCard";
 
 function CategorySection({ categories = [] }: { categories: Category[] }) {
