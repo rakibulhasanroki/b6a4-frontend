@@ -1,8 +1,11 @@
+"use client";
+
 import Image from "next/image";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Medicine } from "@/types";
+import { useCart } from "@/context/cart-context";
 
 export type CardMode = "home" | "shop";
 
@@ -13,6 +16,7 @@ export default function MedicineCard({
   medicine: Medicine;
   mode?: CardMode;
 }) {
+  const { addToCart } = useCart();
   return (
     <Card className="overflow-hidden flex flex-col">
       <div className="px-4 pt-4">
@@ -46,7 +50,20 @@ export default function MedicineCard({
               <Link href={`/shop/${medicine.id}`}>Details</Link>
             </Button>
 
-            <Button className="flex-1 rounded-l-none">Add to Cart</Button>
+            <Button
+              className="flex-1 rounded-l-none"
+              onClick={() =>
+                addToCart({
+                  id: medicine.id!,
+                  name: medicine.name,
+                  price: medicine.price,
+                  image: medicine.image,
+                  stock: medicine.stock!,
+                })
+              }
+            >
+              Add To Cart
+            </Button>
           </div>
         )}
       </CardFooter>

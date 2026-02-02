@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Metadata } from "next";
+import AddToCartButton from "@/components/modules/shop/AddToCartButton";
 
 interface categoryParams {
   params: {
@@ -94,9 +95,13 @@ export default async function MedicineDetailsPage({ params }: categoryParams) {
               defaultValue={1}
               className="w-16 h-9 rounded-md border px-2 text-sm"
             />
-            <Button className="flex-1 h-9" disabled={medicine.stock === 0}>
-              {medicine.stock === 0 ? "Out of Stock" : "Add to Cart"}
-            </Button>
+            <div className="flex-1 h-9">
+              {medicine.stock === 0 ? (
+                <Button disabled>Out of Stock</Button>
+              ) : (
+                <AddToCartButton medicine={medicine} />
+              )}
+            </div>
           </div>
         </Card>
       </div>

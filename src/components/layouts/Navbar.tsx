@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "./ModeToggle";
-import { ShoppingCart, Pill } from "lucide-react";
+import { Pill } from "lucide-react";
+import CartIcon from "./CartIcon";
 
 export default function Navbar() {
   return (
@@ -25,12 +26,9 @@ export default function Navbar() {
             Shop
           </Link>
 
-          <Link
-            href="/cart"
-            className="rounded-md p-2 transition-colors hover:bg-muted hover:text-primary"
-          >
-            <ShoppingCart className="h-5 w-5" />
-          </Link>
+          <div className="rounded-md p-2 hover:bg-muted transition-colors">
+            <CartIcon />
+          </div>
 
           <Link
             href="/login"
