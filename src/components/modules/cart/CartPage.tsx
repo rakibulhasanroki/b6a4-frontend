@@ -10,12 +10,10 @@ import { useCart } from "@/context/cart-context";
 export default function CartPage() {
   const { items, updateQuantity, removeFromCart, totalItems } = useCart();
 
-  const subtotal = items.reduce(
-    (acc, item) => acc + item.price * item.quantity,
-    0,
+  const subtotal = Number(
+    items.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2),
   );
 
-  // 🛒 Empty Cart UI
   if (items.length === 0) {
     return (
       <div className="container mx-auto px-4 py-20 text-center space-y-4">
@@ -31,7 +29,7 @@ export default function CartPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-10 grid lg:grid-cols-3 gap-10">
+    <div className="container mx-auto px-4 py-10 grid lg:grid-cols-3 gap-10 relative">
       {/* 🧾 Cart Items */}
       <div className="lg:col-span-2 space-y-6">
         <h1 className="text-2xl font-semibold">Shopping Cart ({totalItems})</h1>
@@ -96,8 +94,8 @@ export default function CartPage() {
         ))}
       </div>
 
-      {/* 💳 Order Summary */}
-      <div className="space-y-6">
+      {/*  Order Summary */}
+      <div className="space-y-6 sticky ">
         <Card>
           <CardContent className="p-6 space-y-4">
             <h2 className="text-lg font-semibold">Order Summary</h2>
@@ -121,7 +119,9 @@ export default function CartPage() {
               <span>৳{subtotal}</span>
             </div>
 
-            <Button className="w-full mt-4">Proceed to Checkout</Button>
+            <Button asChild className="w-full mt-4">
+              <Link href="/checkout">Checkout</Link>
+            </Button>
           </CardContent>
         </Card>
       </div>

@@ -6,25 +6,18 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { getCategories } from "@/actions/category.action";
 import { Category } from "@/types";
 
-export default function FiltersSidebar() {
-  const [categories, setCategories] = useState<Category[]>([]);
+export default function FiltersSidebar({
+  categories,
+}: {
+  categories: Category[];
+}) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentCategory = searchParams.get("categoryId");
   const currentPrice = searchParams.get("maxPrice") || "";
   const [maxPrice, setMaxPrice] = useState(currentPrice || " ");
-
-  useEffect(() => {
-    (async () => {
-      const { data } = await getCategories();
-      if (data) {
-        setCategories(data);
-      }
-    })();
-  }, []);
 
   useEffect(() => {
     setMaxPrice(currentPrice);
@@ -84,7 +77,6 @@ export default function FiltersSidebar() {
           ))}
         </div>
 
-        {/* Price Range */}
         <div className="space-y-3">
           <h4 className="text-sm font-medium">Max Price</h4>
           <div className="flex gap-2">

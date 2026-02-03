@@ -88,13 +88,6 @@ export default async function MedicineDetailsPage({ params }: categoryParams) {
           </div>
 
           <div className="flex items-center gap-3 pt-2">
-            <input
-              type="number"
-              min={1}
-              max={medicine.stock}
-              defaultValue={1}
-              className="w-16 h-9 rounded-md border px-2 text-sm"
-            />
             <div className="flex-1 h-9">
               {medicine.stock === 0 ? (
                 <Button disabled>Out of Stock</Button>

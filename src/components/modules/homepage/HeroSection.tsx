@@ -32,6 +32,7 @@ export default function HeroSection() {
             alt="Pharmacy"
             width={600}
             height={400}
+            priority
             className="rounded-2xl shadow-lg object-cover w-full h-auto"
           />
         </div>

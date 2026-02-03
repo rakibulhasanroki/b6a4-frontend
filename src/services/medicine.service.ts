@@ -27,7 +27,7 @@ export const medicineService = {
       }
 
       const res = await fetch(url.toString(), {
-        cache: "no-store",
+        next: { revalidate: 60 },
       });
 
       const data = await res.json();
@@ -51,7 +51,7 @@ export const medicineService = {
   getMedicineById: async function (id: string) {
     try {
       const res = await fetch(`${API_URL}/medicines/${id}`, {
-        cache: "no-store",
+        next: { revalidate: 60 },
       });
 
       const data = await res.json();

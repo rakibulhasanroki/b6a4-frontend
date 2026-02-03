@@ -1,4 +1,5 @@
-import MedicineCard, { Medicine } from "./MedicineCard";
+import { Medicine } from "@/types";
+import MedicineCard from "./MedicineCard";
 
 function FeaturedSection({ medicines = [] }: { medicines: Medicine[] }) {
   return (
