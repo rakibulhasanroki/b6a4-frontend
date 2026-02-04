@@ -2,13 +2,22 @@
 
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/cart-context";
-import { CartItem } from "@/types";
+import { CartItem, Role, User } from "@/types";
 
-export default function AddToCartButton({ medicine }: { medicine: CartItem }) {
+export default function AddToCartButton({
+  medicine,
+  user,
+}: {
+  medicine: CartItem;
+  user?: User;
+}) {
   const { addToCart } = useCart();
+  const disabled =
+    user && (user.role === Role.admin || user.role === Role.seller);
 
   return (
     <Button
+      disabled={disabled}
       onClick={() =>
         addToCart({
           id: medicine.id,

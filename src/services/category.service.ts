@@ -5,9 +5,16 @@ const API_URL = env.API_URL;
 export const categoryService = {
   getCategories: async function () {
     try {
-      const res = await fetch(`${API_URL}/categories`, {
+      const res = await fetch(`${API_URL}/api/categories`, {
         next: { revalidate: 300 },
       });
+
+      if (!res.ok) {
+        return {
+          data: null,
+          error: { message: "Failed to fetch categories" },
+        };
+      }
 
       const data = await res.json();
 
@@ -16,7 +23,6 @@ export const categoryService = {
       return {
         data: null,
         error: {
-          error: err,
           message: "Failed to fetch categories",
         },
       };

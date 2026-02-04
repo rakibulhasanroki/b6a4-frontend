@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Metadata } from "next";
 import AddToCartButton from "@/components/modules/shop/AddToCartButton";
+import { getSessionUser } from "@/lib/getSessionUser";
 
 interface categoryParams {
   params: {
@@ -20,6 +21,8 @@ export default async function MedicineDetailsPage({ params }: categoryParams) {
 
   const res = await medicineService.getMedicineById(id);
   const medicine = res.data;
+
+  const user = await getSessionUser({ requireAuth: true });
 
   if (!medicine) {
     return <div className="container mx-auto py-20">Medicine not found.</div>;
@@ -92,12 +95,36 @@ export default async function MedicineDetailsPage({ params }: categoryParams) {
               {medicine.stock === 0 ? (
                 <Button disabled>Out of Stock</Button>
               ) : (
-                <AddToCartButton medicine={medicine} />
+                <AddToCartButton medicine={medicine} user={user} />
               )}
             </div>
           </div>
         </Card>
       </div>
+
+      {medicine.reviews && medicine.reviews.length > 0 && (
+        <div className="mt-12 max-w-3xl">
+          <h2 className="text-xl font-semibold mb-6">Customer Reviews</h2>
+
+          <div className="space-y-6">
+            {medicine.reviews.map((review: any) => (
+              <Card key={review.customer.id} className="p-5 space-y-2">
+                <div className="flex items-center justify-between">
+                  <p className="font-medium">{review.customer.name}</p>
+                  <div className="text-sm font-medium text-yellow-600">
+                    {"★".repeat(review.rating)}
+                    {"☆".repeat(5 - review.rating)}
+                  </div>
+                </div>
+
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {review.comment}
+                </p>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
     </section>
   );
 }

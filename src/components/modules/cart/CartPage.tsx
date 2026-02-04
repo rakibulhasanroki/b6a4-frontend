@@ -21,7 +21,7 @@ export default function CartPage() {
         <p className="text-muted-foreground">
           Looks like you haven’t added any medicines yet.
         </p>
-        <Link href="/shop">
+        <Link href="/shop" prefetch>
           <Button>Go to Shop</Button>
         </Link>
       </div>

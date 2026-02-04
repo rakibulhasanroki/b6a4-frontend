@@ -24,10 +24,10 @@ import {
 } from "@/components/ui/select";
 import { authClient } from "@/lib/auth-client";
 import { useForm } from "@tanstack/react-form";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import * as z from "zod";
 
-//  Fixed Zod schema
 export const formSchema = z
   .object({
     name: z
@@ -47,7 +47,7 @@ export const formSchema = z
       .refine((val) => !val || /^[0-9]{10,15}$/.test(val), {
         message: "Phone must be 10-15 digits",
       })
-      .transform((val) => val ?? ""), // ✅ ensures string type
+      .transform((val) => val ?? ""),
     role: z.enum(["CUSTOMER", "SELLER"]),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -56,6 +56,7 @@ export const formSchema = z
   });
 
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
+  const router = useRouter();
   const form = useForm({
     defaultValues: {
       name: "",
@@ -85,6 +86,8 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
           id: toastId,
           position: "bottom-center",
         });
+        router.push("/");
+        router.refresh();
       } catch (err) {
         toast.error("Something went wrong, please try again", {
           id: toastId,

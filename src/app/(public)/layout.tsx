@@ -1,7 +1,9 @@
+export const dynamic = "force-dynamic";
 import Footer from "@/components/layouts/Footer";
 import Navbar from "@/components/layouts/Navbar";
+import { getSessionUser } from "@/lib/getSessionUser";
 
-export default function PublicLayout({
+export default async function PublicLayout({
   children,
 }: {
   children: React.ReactNode;

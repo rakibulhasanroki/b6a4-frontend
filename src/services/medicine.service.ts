@@ -16,7 +16,7 @@ export interface MedicineQuery {
 export const medicineService = {
   getMedicines: async function (query?: MedicineQuery) {
     try {
-      const url = new URL(`${API_URL}/medicines`);
+      const url = new URL(`${API_URL}/api/medicines`);
 
       if (query) {
         Object.entries(query).forEach(([key, value]) => {
@@ -30,6 +30,10 @@ export const medicineService = {
         next: { revalidate: 60 },
       });
 
+      if (!res.ok) {
+        return { data: null, error: { message: "Failed to fetch categories" } };
+      }
+
       const data = await res.json();
 
       return {
@@ -41,7 +45,6 @@ export const medicineService = {
       return {
         data: null,
         error: {
-          error: err,
           message: "Something went wrong in medicineService.getMedicines",
         },
       };
@@ -50,9 +53,16 @@ export const medicineService = {
 
   getMedicineById: async function (id: string) {
     try {
-      const res = await fetch(`${API_URL}/medicines/${id}`, {
+      const res = await fetch(`${API_URL}/api/medicines/${id}`, {
         next: { revalidate: 60 },
       });
+
+      if (!res.ok) {
+        return {
+          data: null,
+          error: { message: "Failed to fetch medicine details" },
+        };
+      }
 
       const data = await res.json();
 
@@ -61,8 +71,7 @@ export const medicineService = {
       return {
         data: null,
         error: {
-          error: err,
-          message: "Something went wrong in medicineService.getMedicineById",
+          message: "Something went wrong in medicine Service",
         },
       };
     }

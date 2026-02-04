@@ -11,7 +11,7 @@ export const orderService = {
     const cookieStore = await cookies();
     const cookieHeader = cookieStore.toString();
 
-    const res = await fetch(`${API_URL}/orders`, {
+    const res = await fetch(`${API_URL}/api/orders`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -27,5 +27,69 @@ export const orderService = {
     }
 
     return res.json();
+  },
+
+  getMyOrders: async () => {
+    try {
+      const cookieStore = await cookies();
+      const cookieHeader = cookieStore.toString();
+
+      const res = await fetch(`${API_URL}/api/orders`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieHeader,
+        },
+        cache: "no-store",
+      });
+
+      const result = await res.json();
+
+      if (!res.ok) {
+        return {
+          data: null,
+          error: { message: result?.message || "Failed to get orders" },
+        };
+      }
+
+      return { data: result.data, error: null };
+    } catch (err) {
+      console.error(err);
+      return {
+        data: null,
+        error: { message: "Something went wrong while fetching orders" },
+      };
+    }
+  },
+
+  getOrderById: async function (id: string) {
+    try {
+      const cookieStore = await cookies();
+
+      const res = await fetch(`${API_URL}/api/orders/${id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        next: { revalidate: 60 },
+      });
+
+      if (!res.ok) {
+        return {
+          data: null,
+          error: { message: "Failed to get order details" },
+        };
+      }
+      const result = await res.json();
+
+      return { data: result.data, error: null };
+    } catch (err) {
+      console.error(err);
+      return {
+        data: null,
+        error: { message: "Something went wrong while fetching order details" },
+      };
+    }
   },
 };

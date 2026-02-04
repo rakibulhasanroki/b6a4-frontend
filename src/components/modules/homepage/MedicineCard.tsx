@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { Medicine } from "@/types";
+import { Medicine, Role, User } from "@/types";
 import { useCart } from "@/context/cart-context";
 
 export type CardMode = "home" | "shop";
@@ -12,11 +12,25 @@ export type CardMode = "home" | "shop";
 export default function MedicineCard({
   medicine,
   mode = "shop",
+  user,
 }: {
   medicine: Medicine;
   mode?: CardMode;
+  user?: User;
 }) {
   const { addToCart } = useCart();
+  const disabled =
+    user && (user.role === Role.admin || user.role === Role.seller);
+  const reviews = medicine.reviews || [];
+  const reviewCount = reviews.length;
+
+  const avgRating =
+    reviewCount > 0
+      ? (
+          reviews.reduce((sum: number, r: any) => sum + r.rating, 0) /
+          reviewCount
+        ).toFixed(1)
+      : null;
   return (
     <Card className="overflow-hidden flex flex-col">
       <div className="px-4 pt-4">
@@ -34,6 +48,14 @@ export default function MedicineCard({
       <CardContent className="p-4 flex-1 space-y-1">
         <h3 className="font-medium">{medicine.name}</h3>
         <p className="text-sm text-muted-foreground">৳{medicine.price}</p>
+        {reviewCount > 0 && (
+          <div className="flex items-center gap-2 text-sm">
+            <span className="text-yellow-600 font-medium">★ {avgRating}</span>
+            <span className="text-muted-foreground">
+              ({reviewCount} reviews)
+            </span>
+          </div>
+        )}
         <p className="font-bold">Manufacturer: {medicine.manufacturer}</p>
       </CardContent>
 
@@ -51,6 +73,7 @@ export default function MedicineCard({
             </Button>
 
             <Button
+              disabled={disabled}
               className="flex-1 rounded-l-none"
               onClick={() =>
                 addToCart({
