@@ -1,11 +1,10 @@
-export const dynamic = "force-dynamic";
 import ProfileForm from "@/components/modules/profile/ProfileForm";
 import ProfileInfoCard from "@/components/modules/profile/ProfileInfoCard";
 import { getSessionUser } from "@/lib/getSessionUser";
 import { Role } from "@/types";
 
 export default async function ProfilePage() {
-  const user = await getSessionUser({ requireAuth: true });
+  const user = await getSessionUser();
 
   if (user.role === Role.admin) {
     return (

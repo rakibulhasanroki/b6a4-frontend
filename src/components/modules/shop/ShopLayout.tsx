@@ -22,7 +22,9 @@ export default async function ShopLayout({ searchParams }: SearchParams) {
     limit: Number(searchParams.limit ?? 9),
   };
 
-  const medicines = await medicineService.getMedicines(params);
+  const medicines = await medicineService.getMedicines(params, {
+    revalidate: 60,
+  });
   const categoriesData = await categoryService.getCategories();
 
   return (

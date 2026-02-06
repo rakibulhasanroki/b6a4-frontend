@@ -7,14 +7,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import { User as UserIcon } from "lucide-react";
 import { User } from "@/types";
+import Link from "next/link";
 
 export default function UserMenu({ user }: { user: User }) {
-  const router = useRouter();
-
   const handleLogout = async () => {
     await authClient.signOut();
     window.location.href = "/";
@@ -29,8 +27,8 @@ export default function UserMenu({ user }: { user: User }) {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => router.push("/profile")}>
-          {user.name}
+        <DropdownMenuItem>
+          <Link href="/profile">{user.name}</Link>
         </DropdownMenuItem>
 
         <DropdownMenuItem

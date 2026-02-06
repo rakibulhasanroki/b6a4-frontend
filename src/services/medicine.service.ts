@@ -2,6 +2,11 @@ import { env } from "@/env";
 
 const API_URL = env.API_URL;
 
+interface ServiceOptions {
+  cache?: RequestCache;
+  revalidate?: number;
+}
+
 export interface MedicineQuery {
   search?: string;
   categoryId?: string;
@@ -14,7 +19,10 @@ export interface MedicineQuery {
 }
 
 export const medicineService = {
-  getMedicines: async function (query?: MedicineQuery) {
+  getMedicines: async function (
+    query?: MedicineQuery,
+    options?: ServiceOptions,
+  ) {
     try {
       const url = new URL(`${API_URL}/api/medicines`);
 
@@ -25,10 +33,18 @@ export const medicineService = {
           }
         });
       }
+      const config: RequestInit = {};
 
-      const res = await fetch(url.toString(), {
-        next: { revalidate: 60 },
-      });
+      if (options?.cache) {
+        config.cache = options.cache;
+      }
+
+      if (options?.revalidate !== undefined) {
+        config.next = { revalidate: options.revalidate };
+      }
+
+      config.next = { ...config.next, tags: ["medicines"] };
+      const res = await fetch(url.toString(), config);
 
       if (!res.ok) {
         return { data: null, error: { message: "Failed to fetch categories" } };

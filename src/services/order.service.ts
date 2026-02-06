@@ -11,7 +11,7 @@ export const orderService = {
     const cookieStore = await cookies();
     const cookieHeader = cookieStore.toString();
 
-    const res = await fetch(`${API_URL}/api/orders`, {
+    const res = await fetch(`${API_URL}/orders`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -28,7 +28,6 @@ export const orderService = {
 
     return res.json();
   },
-
   getMyOrders: async () => {
     try {
       const cookieStore = await cookies();
@@ -89,6 +88,37 @@ export const orderService = {
       return {
         data: null,
         error: { message: "Something went wrong while fetching order details" },
+      };
+    }
+  },
+
+  getSellerStats: async function () {
+    try {
+      const cookieStore = await cookies();
+
+      const res = await fetch(`${API_URL}/api/seller/stats`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        next: { revalidate: 300 },
+      });
+
+      if (!res.ok) {
+        return {
+          data: null,
+          error: "Failed to fetch seller stats",
+        };
+      }
+
+      const result = await res.json();
+      return { data: result.data, error: null };
+    } catch (err) {
+      console.error(err);
+      return {
+        data: null,
+        error: { message: "Something went wrong while fetching order stats" },
       };
     }
   },

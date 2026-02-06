@@ -10,7 +10,7 @@ export default async function MedicineGrid({
   medicines: Medicine[];
   meta: { page: number; limit: number; total: number; totalPages: number };
 }) {
-  const user = await getSessionUser({ requireAuth: true });
+  const user = await getSessionUser();
   return (
     <div className="lg:col-span-3">
       <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-8">

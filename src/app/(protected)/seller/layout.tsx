@@ -1,14 +1,14 @@
-import Navbar from "@/components/layouts/Navbar";
+import SellerSidebar from "@/components/modules/seller/SellerSidebar";
 
-export default async function SellerLayout({
+export default function SellerLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen flex-col">
-      <Navbar />
-      <main className="flex-1">{children}</main>
+    <div className="flex min-h-screen bg-muted/40">
+      <SellerSidebar />
+      <main className="flex-1 p-6">{children}</main>
     </div>
   );
 }

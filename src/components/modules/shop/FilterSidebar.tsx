@@ -17,7 +17,7 @@ export default function FiltersSidebar({
   const searchParams = useSearchParams();
   const currentCategory = searchParams.get("categoryId");
   const currentPrice = searchParams.get("maxPrice") || "";
-  const [maxPrice, setMaxPrice] = useState(currentPrice || " ");
+  const [maxPrice, setMaxPrice] = useState(currentPrice || "");
 
   useEffect(() => {
     setMaxPrice(currentPrice);

@@ -23,14 +23,12 @@ export default async function Navbar() {
 
         <nav className="flex items-center gap-2 md:gap-4 text-sm font-medium">
           <div className="hidden md:flex items-center gap-1 lg:gap-2">
-            {user && (
-              <Link
-                href="/shop"
-                className="rounded-md px-3 py-2 transition-colors hover:bg-muted hover:text-primary"
-              >
-                Shop
-              </Link>
-            )}
+            <Link
+              href="/shop"
+              className="rounded-md px-3 py-2 transition-colors hover:bg-muted hover:text-primary"
+            >
+              Shop
+            </Link>
 
             {user?.role === Role.customer && (
               <>
@@ -52,7 +50,7 @@ export default async function Navbar() {
             {user?.role === Role.seller && (
               <>
                 <Link
-                  href="/seller/dashboard"
+                  href="/seller"
                   className="rounded-md px-3 py-2 transition-colors hover:bg-muted hover:text-primary"
                 >
                   Dashboard
@@ -84,7 +82,7 @@ export default async function Navbar() {
             )}
           </div>
 
-          {(!user || user.role === "CUSTOMER") && (
+          {(!user || user.role === Role.customer) && (
             <div className="rounded-md p-2 hover:bg-muted transition-colors">
               <CartIcon />
             </div>

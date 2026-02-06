@@ -18,7 +18,6 @@ import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
 
 import { useForm } from "@tanstack/react-form";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import * as z from "zod";
 export const formSchema = z.object({
@@ -31,8 +30,6 @@ export const formSchema = z.object({
     .regex(/[^A-Za-z0-9]/, "Password must include a special character"),
 });
 export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
-  const router = useRouter();
-
   const form = useForm({
     defaultValues: {
       email: "",
@@ -59,8 +56,7 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
           id: toastId,
           position: "bottom-center",
         });
-        router.push("/");
-        router.refresh();
+        window.location.href = "/";
       } catch (err) {
         toast.error("Something went wrong,Please try again", {
           id: toastId,

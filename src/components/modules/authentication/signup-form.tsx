@@ -24,7 +24,6 @@ import {
 } from "@/components/ui/select";
 import { authClient } from "@/lib/auth-client";
 import { useForm } from "@tanstack/react-form";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import * as z from "zod";
 
@@ -56,7 +55,6 @@ export const formSchema = z
   });
 
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
-  const router = useRouter();
   const form = useForm({
     defaultValues: {
       name: "",
@@ -86,8 +84,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
           id: toastId,
           position: "bottom-center",
         });
-        router.push("/");
-        router.refresh();
+        window.location.href = "/";
       } catch (err) {
         toast.error("Something went wrong, please try again", {
           id: toastId,

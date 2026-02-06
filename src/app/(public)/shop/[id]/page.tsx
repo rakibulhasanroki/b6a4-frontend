@@ -22,7 +22,7 @@ export default async function MedicineDetailsPage({ params }: categoryParams) {
   const res = await medicineService.getMedicineById(id);
   const medicine = res.data;
 
-  const user = await getSessionUser({ requireAuth: true });
+  const user = await getSessionUser();
 
   if (!medicine) {
     return <div className="container mx-auto py-20">Medicine not found.</div>;
