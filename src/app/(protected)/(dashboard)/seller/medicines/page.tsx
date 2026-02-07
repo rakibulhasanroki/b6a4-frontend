@@ -1,10 +1,10 @@
 import { categoryService } from "@/services/category.service";
 import PaginationControls from "@/components/ui/pagination";
 import CategoryFilter from "@/components/modules/seller/CategoryFilter";
-import MedicinesTable from "@/components/modules/seller/MedicineTabl";
 import { medicineService } from "@/services/medicine.service";
 import MedicineForm from "@/components/modules/seller/MedicineForm";
 import MedicineTabs from "@/components/modules/seller/MedicineTab";
+import MedicinesTable from "@/components/modules/seller/MedicineTable";
 export default async function SellerMedicinesPage({ searchParams }: any) {
   const params = await searchParams;
 

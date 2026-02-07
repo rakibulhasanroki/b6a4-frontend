@@ -45,12 +45,16 @@ export default function MedicinesTable({ medicines }: { medicines: any[] }) {
   };
 
   const deleteMedicine = async (id: string) => {
-    try {
-      await deleteMedicineAction(id);
-      toast.success("Medicine deleted");
-    } catch (err: any) {
-      toast.error(err.message);
+    const res = await deleteMedicineAction(id);
+
+    if (!res) return;
+
+    if (!res.success) {
+      toast.error(res.message);
+      return;
     }
+
+    toast.success(res.message || "Medicine deleted");
   };
 
   return (

@@ -102,7 +102,7 @@ export const orderService = {
           "Content-Type": "application/json",
           Cookie: cookieStore.toString(),
         },
-        next: { revalidate: 300 },
+        next: { revalidate: 120 },
       });
 
       if (!res.ok) {

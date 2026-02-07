@@ -66,4 +66,38 @@ export const userService = {
       };
     }
   },
+
+  getAdminStats: async function () {
+    try {
+      const cookieStore = await cookies();
+
+      const res = await fetch(`${AUTH_URL}/api/users/stats`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        credentials: "include",
+        next: { revalidate: 120 },
+      });
+
+      if (!res.ok) {
+        return {
+          data: null,
+          error: { message: "Admin stats get failed" },
+        };
+      }
+      const result = await res.json();
+
+      return { data: result, error: null };
+    } catch (err) {
+      console.log(err);
+      return {
+        data: null,
+        error: {
+          message: "Something went wrong while  user service get stats",
+        },
+      };
+    }
+  },
 };

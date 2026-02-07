@@ -17,29 +17,34 @@ export default function Footer() {
           <h4 className="font-medium text-foreground">Quick Links</h4>
           <ul className="space-y-1 text-muted-foreground">
             <li>
-              <Link href="/shop" className="hover:text-primary">
+              <Link href="/shop" className="hover:text-primary transition">
                 Shop Medicines
               </Link>
             </li>
             <li>
-              <Link href="/login" className="hover:text-primary">
-                Login
-              </Link>
-            </li>
-            <li>
-              <Link href="/signup" className="hover:text-primary">
-                Sign Up
+              <Link href="/about" className="hover:text-primary transition">
+                About Us
               </Link>
             </li>
           </ul>
         </div>
 
-        {/* Info */}
+        {/* Information */}
         <div className="space-y-2">
           <h4 className="font-medium text-foreground">Information</h4>
           <p className="text-muted-foreground">
             We sell only OTC (over-the-counter) medicines. No prescription drugs
             available.
+          </p>
+
+          <p className="text-muted-foreground">
+            Contact:{" "}
+            <Link
+              href="mailto:medistore@medi.com"
+              className="text-primary hover:underline"
+            >
+              medistore@mstore.com
+            </Link>
           </p>
         </div>
       </div>

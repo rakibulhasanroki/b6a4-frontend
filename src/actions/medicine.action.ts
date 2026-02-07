@@ -3,6 +3,7 @@
 import { env } from "@/env";
 import { updateTag } from "next/cache";
 import { cookies } from "next/headers";
+
 const API_URL = env.API_URL;
 
 export async function updateMedicineAction(
@@ -45,8 +46,16 @@ export async function deleteMedicineAction(id: string) {
     updateTag("medicines");
   }
 
+  const error = await res.json();
+
   if (!res.ok) {
-    const error = await res.json();
-    throw new Error(error.message || "Delete failed");
+    return {
+      success: false,
+      message: error.message,
+    };
   }
+  return {
+    success: true,
+    message: "Medicine deleted successfully",
+  };
 }
