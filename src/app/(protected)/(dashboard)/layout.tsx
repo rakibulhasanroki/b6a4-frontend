@@ -1,5 +1,5 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
+import DashboardSidebar from "@/components/modules/dashboard/DashboardSidebar";
 import { getSessionUser } from "@/lib/getSessionUser";
 import UserMenu from "@/components/layouts/UserMenu";
 import { ModeToggle } from "@/components/layouts/ModeToggle";
