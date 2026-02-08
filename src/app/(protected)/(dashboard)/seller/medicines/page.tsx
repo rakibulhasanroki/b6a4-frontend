@@ -14,7 +14,7 @@ export default async function SellerMedicinesPage({ searchParams }: any) {
       limit: 10,
       categoryId: params.categoryId,
     },
-    { revalidate: 60 },
+    { revalidate: 120 },
   );
 
   const categoriesRes = await categoryService.getCategories();

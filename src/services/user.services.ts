@@ -78,7 +78,7 @@ export const userService = {
           Cookie: cookieStore.toString(),
         },
         credentials: "include",
-        next: { revalidate: 120 },
+        next: { revalidate: 120, tags: ["adminStats"] },
       });
 
       if (!res.ok) {
@@ -96,6 +96,55 @@ export const userService = {
         data: null,
         error: {
           message: "Something went wrong while  user service get stats",
+        },
+      };
+    }
+  },
+
+  getAllUsers: async function (query?: { page?: number; limit?: number }) {
+    try {
+      const cookieStore = await cookies();
+      const url = new URL(`${AUTH_URL}/api/users`);
+
+      if (query) {
+        Object.entries(query).forEach(([key, value]) => {
+          if (value !== undefined && value !== null) {
+            url.searchParams.append(key, String(value));
+          }
+        });
+      }
+
+      const res = await fetch(url.toString(), {
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        credentials: "include",
+        next: { revalidate: 60, tags: ["allUsers"] },
+      });
+
+      if (!res.ok) {
+        return {
+          data: null,
+          error: { message: "Failed to fetch users" },
+        };
+      }
+
+      const result = await res.json();
+
+      return {
+        data: {
+          data: result.data,
+          metaData: result.metaData,
+        },
+        error: null,
+      };
+    } catch (err) {
+      console.error(err);
+      return {
+        data: null,
+        error: {
+          message: "Something went wrong while fetching users",
         },
       };
     }

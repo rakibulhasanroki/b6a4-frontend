@@ -1,7 +1,11 @@
 import OrdersTable from "@/components/modules/orders/OrderTable";
 import { orderService } from "@/services/order.service";
 
-export default async function SellerOrdersPage({ searchParams }: any) {
+export default async function SellerOrdersPage({
+  searchParams,
+}: {
+  searchParams: { page?: string };
+}) {
   const params = await searchParams;
   const orders = await orderService.getSellerOrders(
     {
@@ -9,7 +13,7 @@ export default async function SellerOrdersPage({ searchParams }: any) {
       limit: 10,
     },
     {
-      revalidate: 60,
+      revalidate: 120,
     },
   );
 

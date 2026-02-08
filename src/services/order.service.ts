@@ -105,7 +105,7 @@ export const orderService = {
           "Content-Type": "application/json",
           Cookie: cookieStore.toString(),
         },
-        next: { revalidate: 120 },
+        next: { revalidate: 120, tags: ["dashboard"] },
       });
 
       if (!res.ok) {

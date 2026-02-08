@@ -33,6 +33,7 @@ export async function updateOrderStatusAction(id: string, status: OrderStatus) {
 
   if (res.ok) {
     updateTag("status");
+    updateTag("dashboard");
   }
 
   const error = await res.json();
