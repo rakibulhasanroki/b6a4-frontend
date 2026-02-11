@@ -18,6 +18,7 @@ export default function UserStatusToggle({
       currentStatus === UserStatus.Active
         ? UserStatus.Banned
         : UserStatus.Active;
+    const toastId = toast.loading("Updating status...");
 
     const res = await UserUpdateStatusAction({
       status: newStatus,
@@ -25,9 +26,9 @@ export default function UserStatusToggle({
     });
 
     if (res?.success) {
-      toast.success(res.message);
+      toast.success(res.message, { id: toastId });
     } else {
-      toast.error(res?.message || "Something went wrong");
+      toast.error(res?.message || "Something went wrong", { id: toastId });
     }
   };
 
@@ -36,6 +37,7 @@ export default function UserStatusToggle({
       size="sm"
       variant={currentStatus === UserStatus.Active ? "default" : "destructive"}
       onClick={toggleStatus}
+      className="cursor-pointer"
     >
       {currentStatus}
     </Button>

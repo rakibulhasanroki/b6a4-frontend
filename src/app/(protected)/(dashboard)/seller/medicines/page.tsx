@@ -8,14 +8,11 @@ import MedicinesTable from "@/components/modules/seller/MedicineTable";
 export default async function SellerMedicinesPage({ searchParams }: any) {
   const params = await searchParams;
 
-  const medicines = await medicineService.getMedicines(
-    {
-      page: Number(params.page ?? 1),
-      limit: 10,
-      categoryId: params.categoryId,
-    },
-    { revalidate: 120 },
-  );
+  const medicines = await medicineService.getSellerMedicines({
+    page: Number(params.page ?? 1),
+    limit: 10,
+    categoryId: params.categoryId,
+  });
 
   const categoriesRes = await categoryService.getCategories();
 

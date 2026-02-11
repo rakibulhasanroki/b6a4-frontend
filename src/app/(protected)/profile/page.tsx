@@ -2,6 +2,11 @@ import ProfileForm from "@/components/modules/profile/ProfileForm";
 import ProfileInfoCard from "@/components/modules/profile/ProfileInfoCard";
 import { getSessionUser } from "@/lib/getSessionUser";
 import { Role } from "@/types";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Profile",
+};
 
 export default async function ProfilePage() {
   const user = await getSessionUser();

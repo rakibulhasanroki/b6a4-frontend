@@ -1,3 +1,4 @@
+import { env } from "@/env";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
@@ -12,8 +13,8 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return [
       {
-        source: "/api/auth/:path*",
-        destination: `${process.env.NEXT_PUBLIC_API_URL}`,
+        source: "/api/:path*",
+        destination: `${env.NEXT_PUBLIC_API_URL}/api/:path*`,
       },
     ];
   },

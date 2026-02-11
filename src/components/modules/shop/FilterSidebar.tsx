@@ -7,6 +7,13 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Category } from "@/types";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function FiltersSidebar({
   categories,
@@ -17,6 +24,7 @@ export default function FiltersSidebar({
   const searchParams = useSearchParams();
   const currentCategory = searchParams.get("categoryId");
   const currentPrice = searchParams.get("maxPrice") || "";
+  const currentSort = searchParams.get("sort") ?? "";
   const [maxPrice, setMaxPrice] = useState(currentPrice || "");
 
   useEffect(() => {
@@ -50,6 +58,19 @@ export default function FiltersSidebar({
   function clearSearch() {
     const params = new URLSearchParams(searchParams.toString());
     params.delete("maxPrice");
+    router.push(`/shop?${params.toString()}`);
+  }
+
+  function handleSortChange(value: string) {
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (value) {
+      params.set("sort", value);
+    } else {
+      params.delete("sort");
+    }
+
+    params.delete("page");
     router.push(`/shop?${params.toString()}`);
   }
 
@@ -94,9 +115,28 @@ export default function FiltersSidebar({
           </div>
         </div>
 
-        <Button className="w-full" onClick={applyFilters}>
+        <Button className="w-full cursor-pointer" onClick={applyFilters}>
           Apply Filters
         </Button>
+
+        <div className="space-y-3">
+          <h4 className="text-sm font-medium">Sort By</h4>
+
+          <Select
+            value={currentSort || undefined}
+            onValueChange={(value) => handleSortChange(value)}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Default" />
+            </SelectTrigger>
+
+            <SelectContent>
+              <SelectItem value="created_desc">Newest</SelectItem>
+              <SelectItem value="price_asc">Price: Low to High</SelectItem>
+              <SelectItem value="price_desc">Price: High to Low</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </CardContent>
     </Card>
   );

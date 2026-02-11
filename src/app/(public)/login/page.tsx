@@ -1,7 +1,12 @@
 export const dynamic = "force-dynamic";
 import { LoginForm } from "@/components/modules/authentication/login-form";
 import { userService } from "@/services/user.services";
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
+
+export const metadata: Metadata = {
+  title: "Login",
+};
 
 export default async function LoginPage() {
   const { data: session, error } = await userService.getSession();

@@ -3,6 +3,15 @@ import DashboardSidebar from "@/components/modules/dashboard/DashboardSidebar";
 import { getSessionUser } from "@/lib/getSessionUser";
 import UserMenu from "@/components/layouts/UserMenu";
 import { ModeToggle } from "@/components/layouts/ModeToggle";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: {
+    default: "Dashboard",
+    template: "%s | Dashboard",
+  },
+  description: "Your trusted online medicine shop",
+};
 
 export default async function DashboardLayout({
   children,
@@ -21,7 +30,7 @@ export default async function DashboardLayout({
             <div>
               <SidebarTrigger />
             </div>
-            <div>
+            <div className="space-x-2">
               <UserMenu user={user} />
               <ModeToggle />
             </div>

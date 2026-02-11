@@ -6,6 +6,12 @@ import { UserStatus } from "@/types";
 import { cookies } from "next/headers";
 import { env } from "@/env";
 const API_URL = env.API_URL;
+
+export async function getSessionAction() {
+  const { data } = await userService.getSession();
+  return data;
+}
+
 export async function updateProfileAction(data: {
   name: string;
   phoneNumber: string;
@@ -46,10 +52,6 @@ export async function UserUpdateStatusAction({
     });
 
     const result = await res.json();
-    if (res.ok) {
-      updateTag("adminStats");
-      updateTag("allUsers");
-    }
 
     if (!res.ok) {
       return {
@@ -57,6 +59,9 @@ export async function UserUpdateStatusAction({
         message: result?.message || "Status update failed",
       };
     }
+
+    updateTag("adminStats");
+    updateTag("allUsers");
 
     return {
       success: true,

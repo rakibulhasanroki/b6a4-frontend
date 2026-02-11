@@ -43,7 +43,7 @@ export default function Footer() {
               href="mailto:medistore@medi.com"
               className="text-primary hover:underline"
             >
-              medistore@mstore.com
+              inbox@medistore.com
             </Link>
           </p>
         </div>

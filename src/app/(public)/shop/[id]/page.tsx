@@ -107,21 +107,27 @@ export default async function MedicineDetailsPage({ params }: categoryParams) {
           <h2 className="text-xl font-semibold mb-6">Customer Reviews</h2>
 
           <div className="space-y-6">
-            {medicine.reviews.map((review: any) => (
-              <Card key={review.customer.id} className="p-5 space-y-2">
-                <div className="flex items-center justify-between">
-                  <p className="font-medium">{review.customer.name}</p>
-                  <div className="text-sm font-medium text-yellow-600">
-                    {"★".repeat(review.rating)}
-                    {"☆".repeat(5 - review.rating)}
-                  </div>
-                </div>
+            {medicine.reviews.map((review: any) => {
+              const rating = Number(review.rating) || 0;
+              const safeRating = Math.min(5, Math.max(0, rating));
 
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {review.comment}
-                </p>
-              </Card>
-            ))}
+              return (
+                <Card key={review.customer.id} className="p-5 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <p className="font-medium">{review.customer.name}</p>
+
+                    <div className="text-sm font-medium text-yellow-600">
+                      {"★".repeat(safeRating)}
+                      {"☆".repeat(5 - safeRating)}
+                    </div>
+                  </div>
+
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {review.comment}
+                  </p>
+                </Card>
+              );
+            })}
           </div>
         </div>
       )}

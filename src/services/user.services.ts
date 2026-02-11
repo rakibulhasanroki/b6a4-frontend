@@ -13,7 +13,6 @@ export const userService = {
           Cookie: cookieStore.toString(),
         },
         cache: "no-store",
-        credentials: "include",
       });
 
       const session = await res.json();
@@ -46,7 +45,7 @@ export const userService = {
           Cookie: cookieStore.toString(),
         },
         body: JSON.stringify(data),
-        credentials: "include",
+        cache: "no-store",
       });
 
       if (!res.ok) {
@@ -74,11 +73,10 @@ export const userService = {
       const res = await fetch(`${AUTH_URL}/api/users/stats`, {
         method: "GET",
         headers: {
-          "Content-Type": "application/json",
           Cookie: cookieStore.toString(),
         },
-        credentials: "include",
-        next: { revalidate: 120, tags: ["adminStats"] },
+        cache: "no-store",
+        next: { tags: ["adminStats"] },
       });
 
       if (!res.ok) {
@@ -116,11 +114,10 @@ export const userService = {
 
       const res = await fetch(url.toString(), {
         headers: {
-          "Content-Type": "application/json",
           Cookie: cookieStore.toString(),
         },
-        credentials: "include",
-        next: { revalidate: 60, tags: ["allUsers"] },
+        cache: "no-store",
+        next: { tags: ["allUsers"] },
       });
 
       if (!res.ok) {

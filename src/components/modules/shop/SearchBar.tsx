@@ -46,7 +46,9 @@ export default function SearchBar() {
           ✕
         </Button>
       )}
-      <Button onClick={handleSearch}>Search</Button>
+      <Button onClick={handleSearch} className="cursor-pointer">
+        Search
+      </Button>
     </div>
   );
 }

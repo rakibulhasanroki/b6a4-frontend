@@ -50,11 +50,11 @@ export default function CheckoutPage() {
         return;
       }
 
-      toast.success("Order placed successfully");
+      toast.success(res.message);
 
       clearCart();
 
-      setOrderId(res.data.data[0].id);
+      setOrderId(res.data[0].id);
     });
   };
 

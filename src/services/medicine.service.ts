@@ -1,4 +1,5 @@
 import { env } from "@/env";
+import { cookies } from "next/headers";
 
 const API_URL = env.API_URL;
 
@@ -16,6 +17,7 @@ export interface MedicineQuery {
   price?: string;
   page?: number;
   limit?: number;
+  sort?: string;
 }
 
 export const medicineService = {
@@ -46,23 +48,68 @@ export const medicineService = {
       config.next = { ...config.next, tags: ["medicines"] };
       const res = await fetch(url.toString(), config);
 
-      if (!res.ok) {
-        return { data: null, error: { message: "Failed to fetch categories" } };
-      }
-
       const data = await res.json();
 
+      if (!res.ok) {
+        return {
+          success: false,
+          message: data.message || "Failed to fetch medicines",
+        };
+      }
+
       return {
+        success: true,
+        data: data.data.data,
+        meta: data.data.metaData,
+      };
+    } catch {
+      return {
+        success: false,
+        message: "Something went wrong in medicineService.getMedicines",
+      };
+    }
+  },
+
+  getSellerMedicines: async function (query?: MedicineQuery) {
+    try {
+      const cookieStore = await cookies();
+      const url = new URL(`${API_URL}/api/seller/medicines`);
+
+      if (query) {
+        Object.entries(query).forEach(([key, value]) => {
+          if (value !== undefined && value !== null && value !== "") {
+            url.searchParams.append(key, value);
+          }
+        });
+      }
+      const config: RequestInit = {
+        headers: {
+          Cookie: cookieStore.toString(),
+        },
+        cache: "no-store",
+        next: { tags: ["sellerMedicines"] },
+      };
+
+      const res = await fetch(url.toString(), config);
+
+      const data = await res.json();
+      if (!res.ok) {
+        return {
+          success: false,
+          message: data.message || "Failed to fetch medicines",
+        };
+      }
+
+      return {
+        success: true,
         data: data.data.data,
         meta: data.data.metaData,
         error: null,
       };
-    } catch (err) {
+    } catch {
       return {
-        data: null,
-        error: {
-          message: "Something went wrong in medicineService.getMedicines",
-        },
+        success: false,
+        message: "Something went wrong in medicineService.getMedicines",
       };
     }
   },
@@ -70,25 +117,22 @@ export const medicineService = {
   getMedicineById: async function (id: string) {
     try {
       const res = await fetch(`${API_URL}/api/medicines/${id}`, {
-        next: { revalidate: 60 },
+        next: { revalidate: 300 },
       });
 
+      const data = await res.json();
       if (!res.ok) {
         return {
-          data: null,
-          error: { message: "Failed to fetch medicine details" },
+          success: false,
+          message: data.message || "Failed to fetch medicine details",
         };
       }
 
-      const data = await res.json();
-
-      return { data: data.data, error: null };
-    } catch (err) {
+      return { success: true, data: data.data };
+    } catch {
       return {
-        data: null,
-        error: {
-          message: "Something went wrong in medicine Service",
-        },
+        success: false,
+        message: "Something went wrong in medicine Service",
       };
     }
   },

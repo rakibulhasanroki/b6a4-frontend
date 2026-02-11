@@ -15,6 +15,9 @@ export default function Review({ medicineId }: { medicineId: string }) {
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
+    const toastId = toast.loading("Submitting your review...", {
+      position: "bottom-center",
+    });
     try {
       setLoading(true);
       const data = {
@@ -30,17 +33,19 @@ export default function Review({ medicineId }: { medicineId: string }) {
         credentials: "include",
       });
 
+      const result = await res.json();
       if (!res.ok) {
-        const data = await res.json();
-        toast.error(data.message, {
-          position: "bottom-center",
+        const message = result?.message?.toLowerCase().includes("duplicate")
+          ? "You have already reviewed this medicine"
+          : "Failed to submit review";
+
+        toast.error(message, {
+          id: toastId,
         });
         return;
       }
 
-      toast.success("Review submitted successfully", {
-        position: "bottom-center",
-      });
+      toast.success("Review submitted successfully", { id: toastId });
       setComment("");
       setRating("");
     } catch (err) {
@@ -82,7 +87,7 @@ export default function Review({ medicineId }: { medicineId: string }) {
           size="sm"
           disabled={loading}
           onClick={handleSubmit}
-          className="h-8 text-xs px-4"
+          className="h-8 text-xs px-4 cursor-pointer"
         >
           Submit Review
         </Button>

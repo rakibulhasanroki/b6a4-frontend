@@ -21,7 +21,11 @@ export default function UserMenu({ user }: { user: User }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="rounded-full">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="rounded-full cursor-pointer"
+        >
           <UserIcon className="h-5 w-5" />
         </Button>
       </DropdownMenuTrigger>
@@ -33,7 +37,7 @@ export default function UserMenu({ user }: { user: User }) {
 
         <DropdownMenuItem
           onClick={handleLogout}
-          className="text-red-500 focus:text-red-500"
+          className="text-red-500 focus:text-red-500 cursor-pointer"
         >
           Logout
         </DropdownMenuItem>

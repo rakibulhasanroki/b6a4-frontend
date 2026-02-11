@@ -1,5 +1,6 @@
 import StatCard from "@/components/modules/seller/StatCard";
 import { orderService } from "@/services/order.service";
+import { Metadata } from "next";
 
 export default async function SellerDashboardPage() {
   const stats = await orderService.getSellerStats();

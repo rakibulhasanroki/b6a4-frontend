@@ -43,10 +43,10 @@ export const formSchema = z
     confirmPassword: z.string(),
     phone: z
       .string()
-      .refine((val) => !val || /^[0-9]{10,15}$/.test(val), {
-        message: "Phone must be 10-15 digits",
-      })
-      .transform((val) => val ?? ""),
+      .trim()
+      .refine((val) => val === "" || /^\+?[0-9]{10,15}$/.test(val), {
+        message: "Phone must be 10–15 digits and may include country code",
+      }),
     role: z.enum(["CUSTOMER", "SELLER"]),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -160,7 +160,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
               }}
             />
 
-            {/* Phone (optional) */}
+            {/* Phone */}
             <form.Field
               name="phone"
               children={(field) => {
@@ -168,9 +168,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                   field.state.meta.isTouched && !field.state.meta.isValid;
                 return (
                   <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>
-                      Phone Number (Optional)
-                    </FieldLabel>
+                    <FieldLabel htmlFor={field.name}>Phone Number</FieldLabel>
                     <Input
                       id={field.name}
                       name={field.name}
@@ -271,7 +269,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
               <Field>
                 <Button type="submit">Create Account</Button>
                 <FieldDescription className="px-6 text-center">
-                  Already have an account? <a href="/login">Sign in</a>
+                  Already have an account? <a href="/login">Login</a>
                 </FieldDescription>
               </Field>
             </FieldGroup>

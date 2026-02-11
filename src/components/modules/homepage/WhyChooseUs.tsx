@@ -11,7 +11,7 @@ const whyChooseUsData = [
   },
   {
     title: "Secure Orders",
-    desc: "Your prescriptions and personal data are safe with us.",
+    desc: "Your personal data are safe with us.",
   },
   {
     title: "Customer Support",
@@ -21,16 +21,23 @@ const whyChooseUsData = [
 
 function WhyChooseUs() {
   return (
-    <section className="py-20">
-      <div className="container mx-auto px-4 text-center">
-        <h2 className="text-2xl font-semibold mb-12">Why Choose MediStore?</h2>
+    <section className="py-20 bg-muted/30">
+      <div className="container mx-auto px-4">
+        <div className="text-center mb-12">
+          <h2 className="text-2xl font-semibold tracking-tight">
+            Why Choose MediStore?
+          </h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Trusted service designed for your health and convenience
+          </p>
+        </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 text-left">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {whyChooseUsData.map((item) => (
-            <Card key={item.title} className="hover:shadow-md transition">
-              <CardContent>
-                <h3 className="font-semibold mb-2">{item.title}</h3>
-                <p className="text-muted-foreground text-sm">{item.desc}</p>
+            <Card key={item.title} className="transition-all hover:shadow-md">
+              <CardContent className="p-6 space-y-2">
+                <h3 className="font-semibold">{item.title}</h3>
+                <p className="text-sm text-muted-foreground">{item.desc}</p>
               </CardContent>
             </Card>
           ))}

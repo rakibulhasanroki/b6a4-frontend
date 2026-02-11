@@ -4,10 +4,10 @@ import FeaturedSection from "./FeaturedSection";
 export default async function FeaturedSectionWrapper() {
   const medicineData = await medicineService.getMedicines(
     {
-      limit: 6,
+      limit: 40,
       page: 1,
     },
-    { revalidate: 60 },
+    { revalidate: 300 },
   );
 
   return <FeaturedSection medicines={medicineData?.data || []} />;

@@ -6,9 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useCart } from "@/context/cart-context";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { getSessionAction } from "@/actions/user.action";
 
 export default function CartPage() {
   const { items, updateQuantity, removeFromCart, totalItems } = useCart();
+  const router = useRouter();
 
   const subtotal = Number(
     items.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2),
@@ -28,9 +32,20 @@ export default function CartPage() {
     );
   }
 
+  const handleCheckout = async () => {
+    const session = await getSessionAction();
+
+    if (!session?.user) {
+      toast.info("Please login to place your order");
+      router.push("/login");
+      return;
+    }
+    router.push("/checkout");
+  };
+
   return (
     <div className="container mx-auto px-4 py-10 grid lg:grid-cols-3 gap-10 relative">
-      {/* 🧾 Cart Items */}
+      {/*  Cart Items */}
       <div className="lg:col-span-2 space-y-6">
         <h1 className="text-2xl font-semibold">Shopping Cart ({totalItems})</h1>
 
@@ -119,8 +134,8 @@ export default function CartPage() {
               <span>৳{subtotal}</span>
             </div>
 
-            <Button asChild className="w-full mt-4">
-              <Link href="/checkout">Checkout</Link>
+            <Button className="w-full mt-4" onClick={handleCheckout}>
+              Checkout
             </Button>
           </CardContent>
         </Card>

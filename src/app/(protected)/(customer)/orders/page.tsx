@@ -1,11 +1,25 @@
 import { orderService } from "@/services/order.service";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
+import PaginationControls from "@/components/ui/pagination";
+import { Metadata } from "next";
 
-export default async function OrdersPage() {
-  const { data: orders } = await orderService.getMyOrders();
+export const metadata: Metadata = {
+  title: "Orders",
+};
 
-  if (!orders || !orders.length) {
+export default async function OrdersPage({
+  searchParams,
+}: {
+  searchParams: { page?: number; limit: number };
+}) {
+  const params = await searchParams;
+  const orders = await orderService.getMyOrders({
+    page: Number(params.page ?? 1),
+    limit: Number(params.limit ?? 3),
+  });
+
+  if (!orders.data || !orders.data.length) {
     return <p className="p-10 text-muted-foreground">No orders yet.</p>;
   }
 
@@ -13,7 +27,7 @@ export default async function OrdersPage() {
     <div className="container mx-auto max-w-5xl px-4 py-10 space-y-6">
       <h1 className="text-2xl font-semibold">My Orders</h1>
 
-      {orders.map((order: any) => (
+      {orders.data.map((order: any) => (
         <Card key={order.id}>
           <CardContent className="p-6 flex justify-between items-center">
             <div className="space-y-1">
@@ -38,6 +52,7 @@ export default async function OrdersPage() {
           </CardContent>
         </Card>
       ))}
+      <PaginationControls meta={orders.meta} />
     </div>
   );
 }

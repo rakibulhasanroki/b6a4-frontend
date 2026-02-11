@@ -1,17 +1,20 @@
-export default function GlobalLoading() {
+export default function LogoLoader() {
   return (
-    <div className="min-h-screen bg-background flex items-start justify-center px-6 py-20">
-      <div className="w-full max-w-3xl animate-pulse">
-        <div className="rounded-2xl border border-border bg-card p-6 space-y-5">
-          <div className="h-5 w-1/3 rounded bg-muted" />
-          <div className="h-4 w-full rounded bg-muted" />
-          <div className="h-4 w-5/6 rounded bg-muted" />
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-background">
+      <div className="flex flex-col items-center gap-4">
+        {/* Logo Loader */}
+        <div className="relative flex h-20 w-20 items-center justify-center">
+          {/* Ring */}
+          <div className="absolute inset-0 rounded-full border-4 border-primary/30 animate-spin" />
 
-          <div className="h-44 w-full rounded-xl bg-muted" />
-
-          <div className="h-4 w-2/3 rounded bg-muted" />
-          <div className="h-4 w-1/2 rounded bg-muted" />
+          {/* Logo */}
+          <span className="text-4xl font-extrabold text-primary">M</span>
         </div>
+
+        {/* Text */}
+        <p className="text-sm font-medium text-muted-foreground">
+          Loading MediStore…
+        </p>
       </div>
     </div>
   );

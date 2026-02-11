@@ -13,6 +13,7 @@ export type SearchParams = {
     manufacturer?: string;
     page?: number;
     limit?: number;
+    sort?: string;
   };
 };
 
@@ -23,9 +24,13 @@ export default async function ShopLayout({ searchParams }: SearchParams) {
   };
 
   const medicines = await medicineService.getMedicines(params, {
-    revalidate: 60,
+    revalidate: 300,
   });
   const categoriesData = await categoryService.getCategories();
+
+  if (!medicines.success) {
+    return <div>Medicines not found</div>;
+  }
 
   return (
     <section className="container mx-auto px-4 py-10">

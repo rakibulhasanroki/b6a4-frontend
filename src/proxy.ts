@@ -18,6 +18,7 @@ export async function proxy(request: NextRequest) {
   if (
     pathname === "/" ||
     pathname.startsWith("/shop") ||
+    pathname === "/cart" ||
     pathname === "/about" ||
     pathname === "/login" ||
     pathname === "/signup"
@@ -29,11 +30,7 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  if (
-    pathname.startsWith("/orders") ||
-    pathname.startsWith("/cart") ||
-    pathname.startsWith("/checkout")
-  ) {
+  if (pathname.startsWith("/orders") || pathname.startsWith("/checkout")) {
     if (role !== Role.customer) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
@@ -57,7 +54,6 @@ export async function proxy(request: NextRequest) {
 export const config = {
   matcher: [
     "/orders/:path*",
-    "/cart/:path*",
     "/checkout",
     "/seller",
     "/seller/:path*",

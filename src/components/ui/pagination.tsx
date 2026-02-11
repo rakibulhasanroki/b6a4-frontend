@@ -52,6 +52,7 @@ export default function PaginationControls({ meta }: PaginationControlsProps) {
             size="icon"
             onClick={() => navigateToPage(1)}
             disabled={currentPage === 1}
+            className="cursor-pointer"
           >
             <ChevronsLeft className="h-4 w-4" />
           </Button>
@@ -61,6 +62,7 @@ export default function PaginationControls({ meta }: PaginationControlsProps) {
             size="icon"
             onClick={() => navigateToPage(currentPage - 1)}
             disabled={currentPage === 1}
+            className="cursor-pointer"
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
@@ -74,6 +76,7 @@ export default function PaginationControls({ meta }: PaginationControlsProps) {
             size="icon"
             onClick={() => navigateToPage(currentPage + 1)}
             disabled={currentPage === totalPages}
+            className="cursor-pointer"
           >
             <ChevronRight className="h-4 w-4" />
           </Button>
@@ -83,6 +86,7 @@ export default function PaginationControls({ meta }: PaginationControlsProps) {
             size="icon"
             onClick={() => navigateToPage(totalPages)}
             disabled={currentPage === totalPages}
+            className="cursor-pointer"
           >
             <ChevronsRight className="h-4 w-4" />
           </Button>

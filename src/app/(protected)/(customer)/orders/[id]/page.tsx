@@ -5,6 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import Review from "@/components/modules/orders/Review";
+import { OrderStatus } from "@/types";
+import CancelOrderButton from "@/components/modules/orders/CancelOrderButton";
 
 interface Props {
   params: { id: string };
@@ -75,9 +77,9 @@ export default async function OrderDetailsPage({ params }: Props) {
               </CardTitle>
               <Badge
                 variant={
-                  order.status === "DELIVERED"
+                  order.status === OrderStatus.DELIVERED
                     ? "default"
-                    : order.status === "CANCELLED"
+                    : order.status === OrderStatus.CANCELLED
                       ? "destructive"
                       : "secondary"
                 }
@@ -121,6 +123,9 @@ export default async function OrderDetailsPage({ params }: Props) {
               </div>
             </CardContent>
           </Card>
+          {order.status !== "DELIVERED" && order.status !== "CANCELLED" && (
+            <CancelOrderButton orderId={order.id} />
+          )}
         </div>
       </div>
     </div>
