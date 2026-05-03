@@ -1,5 +1,6 @@
 import { medicineService } from "@/services/medicine.service";
 import Image from "next/image";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Metadata } from "next";
@@ -12,8 +13,9 @@ interface categoryParams {
     name: string;
   };
 }
+
 export const metadata: Metadata = {
-  title: "Shop",
+  title: "Medicine Details",
 };
 
 export default async function MedicineDetailsPage({ params }: categoryParams) {
@@ -28,13 +30,34 @@ export default async function MedicineDetailsPage({ params }: categoryParams) {
     return <div className="container mx-auto py-20">Medicine not found.</div>;
   }
 
+  const reviews = medicine.reviews || [];
+
+  const avgRating =
+    reviews.length > 0
+      ? (
+          reviews.reduce((sum: number, r: any) => sum + Number(r.rating), 0) /
+          reviews.length
+        ).toFixed(1)
+      : null;
+
+  const relatedRes = await medicineService.getMedicines({
+    categoryId: medicine.categoryId,
+    limit: 4,
+  });
+
+  const related =
+    relatedRes.success && relatedRes.data
+      ? relatedRes.data.filter((m: any) => m.id !== medicine.id)
+      : [];
+
   return (
     <section className="container mx-auto px-4 py-12">
       <div className="grid lg:grid-cols-2 gap-10 items-start">
+        {/* IMAGE */}
         <div className="bg-background rounded-xl border p-6">
           <div className="relative w-full max-w-md mx-auto aspect-square">
             <Image
-              src={medicine.image}
+              src={medicine.image || "/fallback-image.jpg"}
               alt={medicine.name}
               fill
               className="object-contain"
@@ -44,75 +67,86 @@ export default async function MedicineDetailsPage({ params }: categoryParams) {
           </div>
         </div>
 
-        <Card className="px-6   space-y-2.5">
-          {/* Title + Manufacturer */}
-          <div className="space-y-1">
-            <h1 className="text-2xl font-semibold leading-tight">
-              {medicine.name}
-            </h1>
-            <p className="text-sm text-muted-foreground">
-              {medicine.manufacturer || "Unknown Manufacturer"}
-            </p>
-          </div>
+        {/* DETAILS */}
+        <Card>
+          <div className="p-6 space-y-3">
+            <div className="space-y-1">
+              <h1 className="text-2xl font-semibold leading-tight">
+                {medicine.name}
+              </h1>
+              <p className="text-sm text-muted-foreground">
+                {medicine.manufacturer || "Unknown Manufacturer"}
+              </p>
 
-          <p className="text-xl font-bold text-primary">৳{medicine.price}</p>
-
-          {/* Meta Info */}
-          <div className="text-sm space-y-1">
-            <p className="text-muted-foreground">
-              Category: {medicine.category?.name}
-            </p>
-            <p
-              className={
-                medicine.stock > 0
-                  ? "text-green-600 font-medium"
-                  : "text-red-500 font-medium"
-              }
-            >
-              {medicine.stock > 0
-                ? `In Stock (${medicine.stock})`
-                : "Out of Stock"}
-            </p>
-          </div>
-
-          <div className="space-y-1">
-            <h3 className="font-medium text-sm">Description</h3>
-            <p className="text-sm text-muted-foreground leading-snug">
-              {medicine.description}
-            </p>
-          </div>
-
-          <div className="text-sm space-y-1">
-            <h3 className="font-medium text-sm">Seller</h3>
-            <p>{medicine.seller?.name}</p>
-            <p className="text-muted-foreground text-xs">
-              {medicine.seller?.phoneNumber}
-            </p>
-          </div>
-
-          <div className="flex items-center gap-3 pt-2">
-            <div className="flex-1 h-9">
-              {medicine.stock === 0 ? (
-                <Button disabled>Out of Stock</Button>
-              ) : (
-                <AddToCartButton medicine={medicine} user={user} />
+              {avgRating && (
+                <p className="text-sm text-yellow-600 font-medium mt-1">
+                  ★ {avgRating} ({reviews.length})
+                </p>
               )}
+            </div>
+
+            <p className="text-xl font-bold text-primary">৳{medicine.price}</p>
+
+            <div className="text-sm space-y-1">
+              <p className="text-muted-foreground">
+                Category: {medicine.category?.name}
+              </p>
+              <p
+                className={
+                  medicine.stock > 0
+                    ? "text-green-600 font-medium"
+                    : "text-red-500 font-medium"
+                }
+              >
+                {medicine.stock > 0
+                  ? `In Stock (${medicine.stock})`
+                  : "Out of Stock"}
+              </p>
+            </div>
+
+            <div className="space-y-1">
+              <h3 className="font-medium text-sm">Description</h3>
+              <p className="text-sm text-muted-foreground leading-snug">
+                {medicine.description || "No description available."}
+              </p>
+            </div>
+
+            <div className="text-sm space-y-1">
+              <h3 className="font-medium text-sm">Seller</h3>
+              <p>{medicine.seller?.name}</p>
+              <p className="text-muted-foreground text-xs">
+                {medicine.seller?.phoneNumber || "N/A"}
+              </p>
+            </div>
+
+            <div className="flex items-center gap-3 pt-2">
+              <div className="flex-1 h-9">
+                {medicine.stock === 0 ? (
+                  <Button disabled>Out of Stock</Button>
+                ) : (
+                  <AddToCartButton medicine={medicine} user={user} />
+                )}
+              </div>
             </div>
           </div>
         </Card>
       </div>
 
-      {medicine.reviews && medicine.reviews.length > 0 && (
+      {/* REVIEWS */}
+      {reviews.length > 0 && (
         <div className="mt-12 max-w-3xl">
           <h2 className="text-xl font-semibold mb-6">Customer Reviews</h2>
 
           <div className="space-y-6">
-            {medicine.reviews.map((review: any) => {
+            {reviews.map((review: any, index: number) => {
               const rating = Number(review.rating) || 0;
               const safeRating = Math.min(5, Math.max(0, rating));
 
               return (
-                <Card key={review.customer.id} className="p-5 space-y-2">
+                <Card
+                  key={`${review.customer.id}-${index}`}
+                  className="p-5 space-y-2"
+                >
                   <div className="flex items-center justify-between">
                     <p className="font-medium">{review.customer.name}</p>
 
@@ -128,6 +162,42 @@ export default async function MedicineDetailsPage({ params }: categoryParams) {
                 </Card>
               );
             })}
+          </div>
+        </div>
+      )}
+
+      {/* RELATED */}
+      {related.length > 0 && (
+        <div className="mt-12">
+          <h2 className="text-xl font-semibold mb-6">Related Medicines</h2>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            {related.map((item: any) => (
+              <Card
+                key={item.id}
+                className="p-3 space-y-2 hover:shadow-sm transition"
+              >
+                <div className="relative w-full h-24">
+                  <Image
+                    src={item.image || "/fallback-image.jpg"}
+                    alt={item.name}
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <p className="text-xs font-medium line-clamp-2 leading-tight">
+                    {item.name}
+                  </p>
+                  <p className="text-xs text-muted-foreground">৳{item.price}</p>
+                </div>
+
+                <Button asChild size="sm" variant="outline" className="w-full">
+                  <Link href={`/shop/${item.id}`}>Details</Link>
+                </Button>
+              </Card>
+            ))}
           </div>
         </div>
       )}

@@ -26,6 +26,9 @@ import { authClient } from "@/lib/auth-client";
 import { useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
 import * as z from "zod";
+import { SocialAuthButton } from "./social-auth-button";
+import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 
 export const formSchema = z
   .object({
@@ -33,20 +36,49 @@ export const formSchema = z
       .string()
       .min(1, "Name must be at least 1 character")
       .max(50, "Name is too long"),
-    email: z.email(),
-    password: z
-      .string()
-      .min(8, "Password must be at least 8 characters long")
-      .regex(/[a-z]/, "Password must include a lowercase letter")
-      .regex(/[A-Z]/, "Password must include an uppercase letter")
-      .regex(/[^A-Za-z0-9]/, "Password must include a special character"),
-    confirmPassword: z.string(),
-    phone: z
+    email: z
       .string()
       .trim()
-      .refine((val) => val === "" || /^\+?[0-9]{10,15}$/.test(val), {
-        message: "Phone must be 10–15 digits and may include country code",
-      }),
+      .min(1, "Email is required")
+      .refine(
+        (val) => val.length === 0 || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val),
+        {
+          message: "Enter a valid email",
+        },
+      )
+      .refine(
+        (val) => {
+          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) return true; // skip if format invalid
+
+          return /\.(com|net|org|edu|gov)$/i.test(val);
+        },
+        {
+          message: "Email must have a valid domain (e.g. .com, .net)",
+        },
+      ),
+    password: z
+      .string()
+      .trim()
+      .min(1, "Password is required")
+      .refine((val) => val.length === 0 || val.length >= 8, {
+        message: "Password must be at least 8 characters long",
+      })
+      .refine(
+        (val) => {
+          if (val.length < 8) return true;
+
+          const hasLower = /[a-z]/.test(val);
+          const hasUpper = /[A-Z]/.test(val);
+          const hasSpecial = /[^A-Za-z0-9]/.test(val);
+
+          return hasLower && hasUpper && hasSpecial;
+        },
+        {
+          message:
+            "Password must include uppercase, lowercase and special character",
+        },
+      ),
+    confirmPassword: z.string(),
     role: z.enum(["CUSTOMER", "SELLER"]),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -55,19 +87,23 @@ export const formSchema = z
   });
 
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const form = useForm({
     defaultValues: {
       name: "",
       email: "",
       password: "",
       confirmPassword: "",
-      phone: "",
       role: "CUSTOMER",
     },
     validators: {
       onSubmit: formSchema,
     },
     onSubmit: async ({ value }) => {
+      setLoading(true);
       const toastId = toast.loading("Creating User", {
         position: "bottom-center",
       });
@@ -90,6 +126,8 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
           id: toastId,
           position: "bottom-center",
         });
+      } finally {
+        setLoading(false);
       }
     },
   });
@@ -160,47 +198,40 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
               }}
             />
 
-            {/* Phone */}
-            <form.Field
-              name="phone"
-              children={(field) => {
-                const isInvalid =
-                  field.state.meta.isTouched && !field.state.meta.isValid;
-                return (
-                  <Field data-invalid={isInvalid}>
-                    <FieldLabel htmlFor={field.name}>Phone Number</FieldLabel>
-                    <Input
-                      id={field.name}
-                      name={field.name}
-                      type="tel"
-                      placeholder="Enter Phone Number"
-                      value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                    />
-                    {isInvalid && (
-                      <FieldError errors={field.state.meta.errors} />
-                    )}
-                  </Field>
-                );
-              }}
-            />
-
             {/* Password */}
             <form.Field
               name="password"
               children={(field) => {
                 const isInvalid =
                   field.state.meta.isTouched && !field.state.meta.isValid;
+
                 return (
                   <Field data-invalid={isInvalid}>
                     <FieldLabel htmlFor={field.name}>Password</FieldLabel>
-                    <Input
-                      id={field.name}
-                      name={field.name}
-                      type="password"
-                      value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                    />
+
+                    <div className="relative">
+                      <Input
+                        id={field.name}
+                        name={field.name}
+                        type={showPassword ? "text" : "password"}
+                        value={field.state.value}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        className="pr-10"
+                      />
+
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword((prev) => !prev)}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground"
+                      >
+                        {showPassword ? (
+                          <EyeOff size={16} />
+                        ) : (
+                          <Eye size={16} />
+                        )}
+                      </button>
+                    </div>
+
                     {isInvalid && (
                       <FieldError errors={field.state.meta.errors} />
                     )}
@@ -215,18 +246,36 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
               children={(field) => {
                 const isInvalid =
                   field.state.meta.isTouched && !field.state.meta.isValid;
+
                 return (
                   <Field data-invalid={isInvalid}>
                     <FieldLabel htmlFor={field.name}>
                       Confirm Password
                     </FieldLabel>
-                    <Input
-                      id={field.name}
-                      name={field.name}
-                      type="password"
-                      value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                    />
+
+                    <div className="relative">
+                      <Input
+                        id={field.name}
+                        name={field.name}
+                        type={showConfirmPassword ? "text" : "password"}
+                        value={field.state.value}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        className="pr-10"
+                      />
+
+                      <button
+                        type="button"
+                        onClick={() => setShowConfirmPassword((prev) => !prev)}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground"
+                      >
+                        {showConfirmPassword ? (
+                          <EyeOff size={16} />
+                        ) : (
+                          <Eye size={16} />
+                        )}
+                      </button>
+                    </div>
+
                     {isInvalid && (
                       <FieldError errors={field.state.meta.errors} />
                     )}
@@ -266,8 +315,11 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
 
             {/* Submit */}
             <FieldGroup>
+              <SocialAuthButton label="Sign up with Google" />
               <Field>
-                <Button type="submit">Create Account</Button>
+                <Button type="submit" disabled={loading}>
+                  {loading ? "Creating..." : "Create Account"}
+                </Button>
                 <FieldDescription className="px-6 text-center">
                   Already have an account? <a href="/login">Login</a>
                 </FieldDescription>

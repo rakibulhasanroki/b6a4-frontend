@@ -48,7 +48,7 @@ export default function DashboardSidebar({ role }: { role: Role }) {
   const items = NAV_ITEMS[role];
 
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar className="sticky top-0 h-svh" collapsible="icon">
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>MediStore</SidebarGroupLabel>

@@ -99,14 +99,20 @@ export const userService = {
     }
   },
 
-  getAllUsers: async function (query?: { page?: number; limit?: number }) {
+  getAllUsers: async function (query?: {
+    page?: number;
+    limit?: number;
+    role?: string;
+    status?: string;
+    search?: string;
+  }) {
     try {
       const cookieStore = await cookies();
       const url = new URL(`${AUTH_URL}/api/users`);
 
       if (query) {
         Object.entries(query).forEach(([key, value]) => {
-          if (value !== undefined && value !== null) {
+          if (value !== undefined && value !== null && value !== "") {
             url.searchParams.append(key, String(value));
           }
         });

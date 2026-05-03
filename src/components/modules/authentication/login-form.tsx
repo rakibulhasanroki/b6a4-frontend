@@ -16,20 +16,59 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
-
+import { Eye, EyeOff } from "lucide-react";
 import { useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
 import * as z from "zod";
+import { SocialAuthButton } from "./social-auth-button";
+import { useState } from "react";
 export const formSchema = z.object({
-  email: z.email(),
+  email: z
+    .string()
+    .trim()
+    .min(1, "Email is required")
+    .refine(
+      (val) => val.length === 0 || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val),
+      {
+        message: "Enter a valid email",
+      },
+    )
+    .refine(
+      (val) => {
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) return true; // skip if format invalid
+
+        return /\.(com|net|org|edu|gov)$/i.test(val);
+      },
+      {
+        message: "Email must have a valid domain (e.g. .com, .net)",
+      },
+    ),
   password: z
     .string()
-    .min(8, "Password must be at least 8 characters long")
-    .regex(/[a-z]/, "Password must include a lowercase letter")
-    .regex(/[A-Z]/, "Password must include an uppercase letter")
-    .regex(/[^A-Za-z0-9]/, "Password must include a special character"),
+    .trim()
+    .min(1, "Password is required")
+    .refine((val) => val.length === 0 || val.length >= 8, {
+      message: "Password must be at least 8 characters long",
+    })
+    .refine(
+      (val) => {
+        if (val.length < 8) return true;
+
+        const hasLower = /[a-z]/.test(val);
+        const hasUpper = /[A-Z]/.test(val);
+        const hasSpecial = /[^A-Za-z0-9]/.test(val);
+
+        return hasLower && hasUpper && hasSpecial;
+      },
+      {
+        message:
+          "Password must include uppercase, lowercase and special character",
+      },
+    ),
 });
 export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const form = useForm({
     defaultValues: {
       email: "",
@@ -39,6 +78,7 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
       onSubmit: formSchema,
     },
     onSubmit: async ({ value }) => {
+      setLoading(true);
       const toastId = toast.loading("Logging User", {
         position: "bottom-center",
       });
@@ -62,6 +102,8 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
           id: toastId,
           position: "bottom-center",
         });
+      } finally {
+        setLoading(false);
       }
     },
   });
@@ -111,16 +153,33 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
               children={(field) => {
                 const isInvalid =
                   field.state.meta.isTouched && !field.state.meta.isValid;
+
                 return (
                   <Field data-invalid={isInvalid}>
                     <FieldLabel htmlFor={field.name}>Password</FieldLabel>
-                    <Input
-                      id={field.name}
-                      name={field.name}
-                      type="password"
-                      value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                    />
+
+                    <div className="relative">
+                      <Input
+                        id={field.name}
+                        name={field.name}
+                        type={showPassword ? "text" : "password"}
+                        value={field.state.value}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        className="pr-10"
+                      />
+
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword((prev) => !prev)}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground"
+                      >
+                        {showPassword ? (
+                          <EyeOff size={16} />
+                        ) : (
+                          <Eye size={16} />
+                        )}
+                      </button>
+                    </div>
 
                     {isInvalid && (
                       <FieldError errors={field.state.meta.errors} />
@@ -128,11 +187,30 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
                   </Field>
                 );
               }}
-            ></form.Field>
+            />
 
             <FieldGroup>
+              <SocialAuthButton label="Continue with Google" />
+              <Button
+                type="button"
+                variant="secondary"
+                disabled={loading}
+                className="cursor-pointer"
+                onClick={() => {
+                  form.setFieldValue("email", "webspare@testmail.com");
+                  form.setFieldValue("password", "@Webspare1234");
+                }}
+              >
+                Use Demo Account
+              </Button>
               <Field>
-                <Button type="submit">Login</Button>
+                <Button
+                  type="submit"
+                  className="cursor-pointer"
+                  disabled={loading}
+                >
+                  {loading ? "Logging in..." : "Login"}
+                </Button>
 
                 <FieldDescription className="px-6 text-center">
                   Sign Up With Email? <a href="/signup">Sign Up</a>

@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+
 import {
   Table,
   TableBody,
@@ -9,10 +11,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+
 import { Button } from "@/components/ui/button";
 import OrderDetails from "./OrderDetails";
 import PaginationControls from "@/components/ui/pagination";
 import { Order } from "@/types";
+
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function OrdersTable({
   orders,
@@ -27,10 +39,53 @@ export default function OrdersTable({
 }) {
   const [selectedOrder, setSelectedOrder] = useState(null);
 
+  const router = useRouter();
+  const searchParamsHook = useSearchParams();
+
+  const search = searchParamsHook.get("search") || "";
+  const status = searchParamsHook.get("status") || "all";
+
+  const setQuery = (key: string, value: string) => {
+    const params = new URLSearchParams(searchParamsHook.toString());
+
+    if (!value || value === "all") {
+      params.delete(key);
+    } else {
+      params.set(key, value);
+    }
+
+    params.set("page", "1");
+    router.push(`?${params.toString()}`);
+  };
+
   return (
     <>
+      {/* FILTER BAR (ADMIN + SELLER BOTH WORK) */}
+      <div className="flex flex-col md:flex-row gap-3 mb-4">
+        <Input
+          placeholder="Search order id / customer..."
+          defaultValue={search}
+          onChange={(e) => setQuery("search", e.target.value)}
+          className="max-w-sm"
+        />
+
+        <Select value={status} onValueChange={(v) => setQuery("status", v)}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Status" />
+          </SelectTrigger>
+
+          <SelectContent>
+            <SelectItem value="all">All</SelectItem>
+            <SelectItem value="PROCESSING">Processing</SelectItem>
+            <SelectItem value="SHIPPED">Shipped</SelectItem>
+            <SelectItem value="DELIVERED">Delivered</SelectItem>
+            <SelectItem value="CANCELLED">Cancelled</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
       {/* Desktop Table  */}
-      <div className="hidden md:block rounded-lg border bg-background shadow-sm">
+      <div className="hidden lg:block rounded-lg border bg-background shadow-sm">
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
@@ -79,7 +134,6 @@ export default function OrdersTable({
                       size="sm"
                       variant="outline"
                       onClick={() => setSelectedOrder(order)}
-                      className="cursor-pointer"
                     >
                       View
                     </Button>
@@ -95,8 +149,8 @@ export default function OrdersTable({
         </div>
       </div>
 
-      {/*  Mobile Cards */}
-      <div className="md:hidden space-y-4">
+      {/* Mobile Cards */}
+      <div className="lg:hidden space-y-4">
         {orders.map((order: any) => (
           <div
             key={order.id}
@@ -107,6 +161,7 @@ export default function OrdersTable({
                 <p className="text-xs text-muted-foreground">Order ID</p>
                 <p className="font-mono text-xs">{order.id}</p>
               </div>
+
               <span className="rounded-md bg-muted px-2 py-1 text-xs">
                 {order.status}
               </span>
@@ -124,6 +179,7 @@ export default function OrdersTable({
                 <p className="text-xs text-muted-foreground">Customer</p>
                 <p>{order.customer.name}</p>
               </div>
+
               <div>
                 <p className="text-xs text-muted-foreground">Total</p>
                 <p className="font-medium">৳{order.totalAmount}</p>
@@ -134,6 +190,7 @@ export default function OrdersTable({
               <p className="text-xs text-muted-foreground">
                 {new Date(order.createdAt).toLocaleDateString()}
               </p>
+
               <Button
                 size="sm"
                 variant="outline"

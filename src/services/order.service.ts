@@ -4,7 +4,12 @@ import { cookies } from "next/headers";
 const API_URL = env.API_URL;
 
 export const orderService = {
-  getMyOrders: async function (query?: { page?: number; limit?: number }) {
+  getMyOrders: async function (query?: {
+    page?: number;
+    limit?: number;
+    status?: string;
+    search?: string;
+  }) {
     try {
       const cookieStore = await cookies();
       const url = new URL(`${API_URL}/api/orders`);
@@ -17,21 +22,19 @@ export const orderService = {
         });
       }
 
-      const config: RequestInit = {
+      const res = await fetch(url.toString(), {
         headers: {
           Cookie: cookieStore.toString(),
         },
         cache: "no-store",
         next: { tags: ["orders"] },
-      };
-
-      const res = await fetch(url.toString(), config);
+      });
 
       if (!res.ok) {
         return {
           data: null,
           meta: null,
-          error: "Failed to fetch seller orders",
+          error: "Failed to fetch orders",
         };
       }
 
@@ -48,7 +51,7 @@ export const orderService = {
         data: null,
         meta: null,
         error: {
-          message: "Something went wrong while fetching seller orders ",
+          message: "Something went wrong while fetching orders",
         },
       };
     }
@@ -116,7 +119,12 @@ export const orderService = {
     }
   },
 
-  getSellerOrders: async function (query?: { page?: number; limit?: number }) {
+  getSellerOrders: async function (query?: {
+    page?: number;
+    limit?: number;
+    status?: string;
+    search?: string;
+  }) {
     try {
       const cookieStore = await cookies();
       const url = new URL(`${API_URL}/api/seller/orders`);
@@ -129,15 +137,13 @@ export const orderService = {
         });
       }
 
-      const config: RequestInit = {
+      const res = await fetch(url.toString(), {
         headers: {
           Cookie: cookieStore.toString(),
         },
         cache: "no-store",
-        next: { tags: ["status"] },
-      };
-
-      const res = await fetch(url.toString(), config);
+        next: { tags: ["seller-orders"] },
+      });
 
       if (!res.ok) {
         return {
@@ -160,7 +166,7 @@ export const orderService = {
         data: null,
         meta: null,
         error: {
-          message: "Something went wrong while fetching seller orders ",
+          message: "Something went wrong while fetching seller orders",
         },
       };
     }

@@ -60,7 +60,7 @@ export default function MedicinesTable({ medicines }: { medicines: any[] }) {
   return (
     <div className="space-y-4">
       {/* Desktop & Tablet Table */}
-      <div className="hidden md:block rounded-lg border border-border bg-background">
+      <div className="hidden lg:block rounded-lg border border-border bg-background">
         <Table>
           <TableHeader>
             <TableRow className="bg-muted/50">
@@ -160,7 +160,7 @@ export default function MedicinesTable({ medicines }: { medicines: any[] }) {
       </div>
 
       {/* Mobile Card Layout */}
-      <div className="md:hidden space-y-3">
+      <div className="lg:hidden space-y-3">
         {medicines.map((med) => (
           <div
             key={med.id}

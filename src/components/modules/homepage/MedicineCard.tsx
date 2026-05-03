@@ -21,6 +21,7 @@ export default function MedicineCard({
   const { addToCart } = useCart();
   const disabled =
     user && (user.role === Role.admin || user.role === Role.seller);
+
   const reviews = medicine.reviews || [];
   const reviewCount = reviews.length;
 
@@ -31,58 +32,77 @@ export default function MedicineCard({
           reviewCount
         ).toFixed(1)
       : null;
+
   return (
-    <Card className="overflow-hidden flex flex-col transition-all hover:shadow-md hover:-translate-y-px">
-      <div className="px-4 pt-4">
-        <div className="relative h-48 w-full overflow-hidden rounded-md bg-white">
+    <Card className="overflow-hidden flex flex-col transition-all hover:shadow-md hover:-translate-y-[1px]">
+      {/* IMAGE */}
+      <div className="px-3 pt-3">
+        <div className="relative h-36 w-full overflow-hidden rounded-md bg-white">
           <Image
             src={medicine.image || "/fallback-image.jpg"}
             alt={medicine.name}
             fill
-            className="object-contain text-black"
+            className="object-contain"
             sizes="(max-width: 768px) 100vw, 300px"
           />
         </div>
       </div>
 
-      <CardContent className="p-4 flex-1 space-y-1.5">
-        <span className="inline-block text-[11px] uppercase tracking-wide font-medium text-muted-foreground bg-muted px-2 py-0.5 rounded">
-          {medicine.category?.name}
-        </span>
-        <h3 className="font-medium leading-snug line-clamp-2">
-          {medicine.name}
-        </h3>
+      {/* CONTENT */}
+      <CardContent className="p-3 flex-1 flex flex-col justify-between">
+        <div className="space-y-1">
+          <span className="inline-block text-[10px] uppercase tracking-wide font-medium text-muted-foreground bg-muted px-2 py-0.5 rounded">
+            {medicine.category?.name}
+          </span>
 
-        <p className="text-sm font-semibold text-primary">৳{medicine.price}</p>
+          <h3 className="text-sm font-medium leading-snug line-clamp-2">
+            {medicine.name}
+          </h3>
 
-        {reviewCount > 0 && (
-          <div className="flex items-center gap-2 text-xs">
-            <span className="text-yellow-600 font-medium">★ {avgRating}</span>
-            <span className="text-muted-foreground">
-              ({reviewCount} reviews)
-            </span>
+          <p className="text-sm font-semibold text-primary">
+            ৳{medicine.price}
+          </p>
+
+          {/* FIXED HEIGHT RATING SLOT (kept) */}
+          <div className="h-4 flex items-center">
+            {reviewCount > 0 && (
+              <div className="flex items-center gap-1 text-xs">
+                <span className="text-yellow-600 font-medium">
+                  ★ {avgRating}
+                </span>
+                <span className="text-muted-foreground">({reviewCount})</span>
+              </div>
+            )}
           </div>
-        )}
+        </div>
 
-        <p className="text-sm font-semibold text-muted-foreground">
-          Manufacturer: {medicine.manufacturer}
+        {/* bottom aligned */}
+        <p className="text-xs font-medium text-muted-foreground truncate">
+          {medicine.manufacturer}
         </p>
       </CardContent>
 
-      <CardFooter className="p-4 pt-0 flex">
+      {/* FOOTER */}
+      <CardFooter className="p-3 pt-0 flex">
         {mode === "home" && (
-          <Button asChild className="w-full">
+          <Button asChild size="sm" className="w-full">
             <Link href={`/shop/${medicine.id}`}>View Details</Link>
           </Button>
         )}
 
         {mode === "shop" && (
-          <div className="flex w-full gap-2">
-            <Button asChild variant="outline" className="flex-1 rounded-r-none">
+          <div className="flex w-full gap-1">
+            <Button
+              asChild
+              size="sm"
+              variant="outline"
+              className="flex-1 rounded-r-none"
+            >
               <Link href={`/shop/${medicine.id}`}>Details</Link>
             </Button>
 
             <Button
+              size="sm"
               disabled={disabled}
               className="flex-1 rounded-l-none cursor-pointer"
               onClick={() =>

@@ -13,7 +13,7 @@ import { User, UserStatus } from "@/types";
 export default function UsersTable({ users }: { users: User[] }) {
   return (
     <>
-      {/* Desktop*/}
+      {/* Desktop */}
       <div className="hidden lg:block rounded-lg border bg-background shadow-sm">
         <Table>
           <TableHeader>
@@ -31,9 +31,7 @@ export default function UsersTable({ users }: { users: User[] }) {
             {users.map((user) => (
               <TableRow key={user.id} className="hover:bg-muted/40">
                 <TableCell className="font-medium">{user.name}</TableCell>
-
                 <TableCell>{user.email}</TableCell>
-
                 <TableCell>{user.phoneNumber}</TableCell>
 
                 <TableCell>
@@ -66,56 +64,20 @@ export default function UsersTable({ users }: { users: User[] }) {
         </Table>
       </div>
 
-      {/*  Tablet */}
-      <div className="hidden sm:grid lg:hidden gap-3">
+      {/* Mobile + Tablet */}
+      <div className="lg:hidden space-y-4">
         {users.map((user) => (
           <div
             key={user.id}
-            className="grid grid-cols-6 items-center gap-3 rounded-lg border bg-background p-3 shadow-sm"
+            className="rounded-xl border bg-background p-4 shadow-sm space-y-4"
           >
-            <div className="col-span-2">
-              <p className="font-medium truncate">{user.name}</p>
-              <p className="text-xs text-muted-foreground truncate">
-                {user.email}
-              </p>
-            </div>
-
-            <div className="text-sm truncate">{user.phoneNumber}</div>
-
-            <div>
-              <Badge variant="secondary" className="whitespace-nowrap">
-                {user.role}
-              </Badge>
-            </div>
-
-            <div>
-              <Badge
-                variant={
-                  user.status === UserStatus.Active ? "default" : "destructive"
-                }
-              >
-                {user.status}
-              </Badge>
-            </div>
-
-            <div className="flex justify-end">
-              <UserStatusToggle userId={user.id} currentStatus={user.status} />
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/*  Mobile  */}
-      <div className="sm:hidden space-y-3">
-        {users.map((user) => (
-          <div
-            key={user.id}
-            className="rounded-lg border bg-background p-4 shadow-sm space-y-3"
-          >
-            <div className="flex justify-between gap-2">
+            {/* Top */}
+            <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
-                <p className="font-medium truncate">{user.name}</p>
-                <p className="text-xs text-muted-foreground truncate">
+                <p className="font-semibold text-foreground truncate">
+                  {user.name}
+                </p>
+                <p className="text-sm text-muted-foreground truncate">
                   {user.email}
                 </p>
               </div>
@@ -124,25 +86,30 @@ export default function UsersTable({ users }: { users: User[] }) {
                 variant={
                   user.status === UserStatus.Active ? "default" : "destructive"
                 }
+                className="shrink-0"
               >
                 {user.status}
               </Badge>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 text-sm">
+            {/* Info Grid */}
+            <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
                 <p className="text-xs text-muted-foreground">Phone</p>
-                <p className="truncate">{user.phoneNumber}</p>
+                <p className="font-medium truncate">
+                  {user.phoneNumber || "-"}
+                </p>
               </div>
 
               <div>
                 <p className="text-xs text-muted-foreground">Role</p>
-                <Badge variant="secondary" className="whitespace-nowrap">
+                <Badge variant="secondary" className="mt-1">
                   {user.role}
                 </Badge>
               </div>
             </div>
 
+            {/* Action */}
             <div className="flex justify-end border-t pt-3">
               <UserStatusToggle userId={user.id} currentStatus={user.status} />
             </div>

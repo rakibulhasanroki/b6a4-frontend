@@ -49,8 +49,21 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="border-t border-border py-4 text-center text-xs text-muted-foreground">
-        © {new Date().getFullYear()} MediStore. All rights reserved.
+      <div className="border-t border-border py-4 text-xs text-muted-foreground">
+        <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-2">
+          {/* LEFT */}
+          <p>© {new Date().getFullYear()} MediStore. All rights reserved.</p>
+
+          {/* RIGHT */}
+          <div className="flex items-center gap-4">
+            <Link href="/privacy" className="hover:text-primary transition">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="hover:text-primary transition">
+              Terms & Conditions
+            </Link>
+          </div>
+        </div>
       </div>
     </footer>
   );

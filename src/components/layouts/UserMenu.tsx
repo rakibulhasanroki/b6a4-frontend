@@ -11,11 +11,29 @@ import { authClient } from "@/lib/auth-client";
 import { User as UserIcon } from "lucide-react";
 import { User } from "@/types";
 import Link from "next/link";
+import { toast } from "sonner";
 
 export default function UserMenu({ user }: { user: User }) {
   const handleLogout = async () => {
-    await authClient.signOut();
-    window.location.href = "/";
+    const toastId = toast.loading("Logging out...", {
+      position: "bottom-center",
+    });
+
+    try {
+      await authClient.signOut();
+
+      toast.success("Logged out successfully", {
+        id: toastId,
+        position: "bottom-center",
+      });
+
+      window.location.href = "/";
+    } catch (error) {
+      toast.error("Logout failed. Please try again.", {
+        id: toastId,
+        position: "bottom-center",
+      });
+    }
   };
 
   return (
